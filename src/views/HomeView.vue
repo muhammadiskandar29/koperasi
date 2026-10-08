@@ -232,4 +232,28 @@ import Accordion from '../components/ui/Accordion.vue'
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 2.25rem;
+  }
+  .page-header {
+    padding: 3rem 0;
+  }
+  .highlight-item h2 {
+    font-size: 2.25rem;
+  }
+  .highlights-grid {
+    padding: 2rem 1rem;
+  }
+  .news-img-wrapper {
+    height: 180px;
+  }
+  .news-content {
+    padding: 1.5rem;
+  }
+  .news-content h3 {
+    font-size: 1.15rem;
+  }
+}
 </style>

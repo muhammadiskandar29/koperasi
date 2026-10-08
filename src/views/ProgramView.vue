@@ -264,4 +264,14 @@ import BaseCard from '../components/ui/BaseCard.vue'
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 768px) {
+  .page-title { font-size: 2.25rem; }
+  .page-header { padding: 3rem 0; margin-bottom: 2rem; }
+  .program-showcase { padding: 1.5rem; gap: 2rem; }
+  .rounded-img { min-height: 200px; }
+  .other-programs-grid { gap: 1.5rem; }
+  .icon-wrapper svg { width: 28px; height: 28px; }
+  .title { font-size: 1.15rem; }
+}
 </style>

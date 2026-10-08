@@ -269,4 +269,14 @@ import BaseCard from '../components/ui/BaseCard.vue'
     padding: 2rem;
   }
 }
+
+@media (max-width: 768px) {
+  .page-title { font-size: 2.25rem; }
+  .page-header { padding: 3rem 0; margin-bottom: 2rem; }
+  .metrics-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .report-card { padding: 1.5rem !important; }
+  .download-section { padding: 1.5rem; text-align: left; align-items: flex-start; }
+  .download-content h3 { font-size: 1.15rem; }
+  .metric-value { font-size: 1.15rem; }
+}
 </style>

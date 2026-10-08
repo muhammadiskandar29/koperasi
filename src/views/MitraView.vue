@@ -274,5 +274,10 @@ import BaseCard from '../components/ui/BaseCard.vue'
   .partners-grid {
     grid-template-columns: 1fr;
   }
+  .page-title { font-size: 2.25rem; }
+  .page-header { padding: 3rem 0; margin-bottom: 2rem; }
+  .partner-card { padding: 1.5rem !important; }
+  .supply-chain { padding: 1.5rem; }
+  .chain-node { padding: 1.25rem 1rem; }
 }
 </style>

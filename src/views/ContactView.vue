@@ -261,4 +261,12 @@ const submitForm = () => {
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 768px) {
+  .page-title { font-size: 2.25rem; }
+  .page-header { padding: 3rem 0; margin-bottom: 2rem; }
+  .contact-grid { gap: 2rem; }
+  .form-card { padding: 1.5rem !important; }
+  .info-card { padding: 1.25rem !important; flex-direction: column; align-items: flex-start; gap: 1rem; }
+}
 </style>
