@@ -6,7 +6,7 @@ const isScrolled = ref(false)
 const route = useRoute()
 
 const handleScroll = () => {
-  isScrolled.value = window.scrollY > 30
+  isScrolled.value = window.scrollY > 10
 }
 
 onMounted(() => {
@@ -45,17 +45,17 @@ onUnmounted(() => {
   left: 0;
   width: 100%;
   z-index: 100;
-  padding: 1.5rem 0;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  background: transparent;
+  padding: 1.25rem 0;
+  transition: background-color 0.3s ease, padding 0.3s ease;
+  background: white;
+  border-bottom: 1px solid transparent;
 }
 
 .navbar-scrolled {
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   padding: 1rem 0;
-  box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+  background: white;
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
 }
 
 .navbar-container {
@@ -65,10 +65,10 @@ onUnmounted(() => {
 }
 
 .logo-text {
-  font-size: 1.75rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  color: var(--color-text-main);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-primary-dark);
 }
 
 .text-primary {
@@ -77,40 +77,20 @@ onUnmounted(() => {
 
 .nav-links {
   display: flex;
-  gap: 3rem;
+  gap: 2.5rem;
   align-items: center;
 }
 
 .nav-link {
-  font-weight: 600;
+  font-weight: 500;
   color: var(--color-text-muted);
-  font-size: 1rem;
+  font-size: 0.95rem;
   transition: color 0.2s ease;
-  position: relative;
 }
 
 .nav-link:hover, .active-link {
   color: var(--color-primary);
-}
-
-.nav-link::after {
-  content: '';
-  position: absolute;
-  width: 0;
-  height: 2px;
-  bottom: -4px;
-  left: 0;
-  background-color: var(--color-primary);
-  transition: width 0.3s ease;
-  border-radius: 2px;
-}
-
-.nav-link:hover::after, .active-link::after {
-  width: 100%;
-}
-
-.nav-btn {
-  padding: 0.75rem 1.75rem;
+  font-weight: 600;
 }
 
 @media (max-width: 992px) {

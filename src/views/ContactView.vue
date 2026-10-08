@@ -25,10 +25,10 @@ const submitForm = () => {
   <div class="page-container">
     <section class="page-header">
       <div class="container text-center">
-        <div class="badge-sub animate-fade-up">Pusat Bantuan</div>
-        <h1 class="page-title animate-fade-up" style="animation-delay: 0.1s">Hubungi KMLC</h1>
+        <div class="badge-sub animate-fade-up">Layanan Dukungan</div>
+        <h1 class="page-title animate-fade-up" style="animation-delay: 0.1s">Pusat Informasi</h1>
         <p class="page-subtitle animate-fade-up" style="animation-delay: 0.2s">
-          Kami siap berdiskusi mengenai peluang kemitraan, pertanyaan seputar keanggotaan, atau dukungan operasional pertanian Anda.
+          Divisi kemitraan dan pelayanan KMLC siap membantu kebutuhan operasional agrikultur Anda.
         </p>
       </div>
     </section>
@@ -39,33 +39,33 @@ const submitForm = () => {
           
           <!-- Contact Info -->
           <div class="contact-info animate-fade-up">
-            <h2 class="mb-4">Informasi Kantor</h2>
+            <h2 class="mb-4">Informasi Institusi</h2>
             <p class="text-muted mb-5">
-              Kantor operasional utama kami berlokasi strategis di pusat sentra agrikultur Indramayu untuk mempermudah akses pelayanan bagi seluruh mitra KTH.
+              Kantor sekretariat operasional berpusat di wilayah Cikawung guna memastikan aksesibilitas yang optimal bagi seluruh mitra binaan kami.
             </p>
 
             <div class="info-blocks">
               <BaseCard class="info-card">
-                <div class="info-icon">📍</div>
+                <svg class="svg-icon info-icon" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                 <div>
-                  <h4>Alamat Kantor</h4>
+                  <h4>Alamat Sekretariat</h4>
                   <p class="text-muted">Desa Cikawung, Kec. Terisi,<br>Kab. Indramayu, Jawa Barat 45262</p>
                 </div>
               </BaseCard>
 
               <BaseCard class="info-card">
-                <div class="info-icon">📞</div>
+                <svg class="svg-icon info-icon" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                 <div>
-                  <h4>Telepon & WhatsApp</h4>
-                  <p class="text-muted">Telepon: (0234) 567890<br>WA: 0812-3456-7890 (Admin)</p>
+                  <h4>Kontak Telepon</h4>
+                  <p class="text-muted">Hunting: (0234) 567890<br>Direct: 0812-3456-7890</p>
                 </div>
               </BaseCard>
 
               <BaseCard class="info-card">
-                <div class="info-icon">✉️</div>
+                <svg class="svg-icon info-icon" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                 <div>
-                  <h4>Email Resmi</h4>
-                  <p class="text-muted">info@kmlc.co.id<br>kemitraan@kmlc.co.id</p>
+                  <h4>Surel Elektronik</h4>
+                  <p class="text-muted">korespondensi@kmlc.co.id<br>kemitraan@kmlc.co.id</p>
                 </div>
               </BaseCard>
             </div>
@@ -74,41 +74,41 @@ const submitForm = () => {
           <!-- Interactive Form -->
           <div class="form-wrapper animate-fade-up" style="animation-delay: 0.2s">
             <BaseCard class="form-card">
-              <h3 class="mb-4">Kirim Pesan Langsung</h3>
+              <h3 class="mb-4">Formulir Komunikasi</h3>
               
               <transition name="fade">
                 <div v-if="isSubmitted" class="alert-success">
-                  ✅ Pesan Anda berhasil dikirim! Tim kami akan segera menghubungi Anda kembali.
+                  Data telah tersubmit ke dalam sistem. Staf KMLC akan merespon selambatnya 1x24 jam operasional.
                 </div>
               </transition>
 
               <form @submit.prevent="submitForm" class="contact-form">
                 <div class="form-group">
-                  <label for="name">Nama Lengkap / Instansi</label>
-                  <input type="text" id="name" v-model="formData.name" required placeholder="Masukkan nama Anda" />
+                  <label for="name">Nama Identitas Lengkap</label>
+                  <input type="text" id="name" v-model="formData.name" required placeholder="Sesuai KTP / Nama Instansi" />
                 </div>
                 
                 <div class="form-group">
-                  <label for="phone">Nomor WhatsApp</label>
-                  <input type="tel" id="phone" v-model="formData.phone" required placeholder="0812xxxxxx" />
+                  <label for="phone">Nomor Kontak (WhatsApp)</label>
+                  <input type="tel" id="phone" v-model="formData.phone" required placeholder="0812-XXXX-XXXX" />
                 </div>
                 
                 <div class="form-group">
-                  <label for="topic">Topik Pembicaraan</label>
+                  <label for="topic">Kategori Keperluan</label>
                   <select id="topic" v-model="formData.topic">
                     <option value="kemitraan">Kemitraan Lahan</option>
-                    <option value="pembiayaan">Pembiayaan Saprotan</option>
-                    <option value="anggota">Pendaftaran Anggota</option>
-                    <option value="lainnya">Pertanyaan Lainnya</option>
+                    <option value="pembiayaan">Pengajuan Saprotan</option>
+                    <option value="anggota">Registrasi KTH</option>
+                    <option value="lainnya">Lainnya</option>
                   </select>
                 </div>
                 
                 <div class="form-group">
-                  <label for="message">Pesan Anda</label>
-                  <textarea id="message" v-model="formData.message" rows="4" required placeholder="Jelaskan kebutuhan Anda..."></textarea>
+                  <label for="message">Rincian Informasi</label>
+                  <textarea id="message" v-model="formData.message" rows="4" required placeholder="Sampaikan detail informasi..."></textarea>
                 </div>
                 
-                <button type="submit" class="btn btn-primary w-100">Kirim Pesan Sekarang</button>
+                <button type="submit" class="btn btn-primary w-100">Kirim Transmisi</button>
               </form>
             </BaseCard>
           </div>
@@ -127,28 +127,29 @@ const submitForm = () => {
 }
 
 .page-header {
-  padding: 6rem 0 4rem 0;
-  margin-bottom: 2rem;
+  padding: 5rem 0 3rem 0;
+  background: white;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 4rem;
 }
 
 .badge-sub {
   color: var(--color-primary);
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 2px;
-  font-size: 0.875rem;
+  letter-spacing: 1px;
+  font-size: 0.8rem;
   margin-bottom: 1rem;
   display: inline-block;
 }
 
 .page-title {
-  font-size: 3.5rem;
-  color: var(--color-text-main);
+  font-size: 3rem;
   margin-bottom: 1rem;
 }
 
 .page-subtitle {
-  font-size: 1.25rem;
+  font-size: 1.125rem;
   color: var(--color-text-muted);
   max-width: 800px;
   margin: 0 auto;
@@ -157,7 +158,7 @@ const submitForm = () => {
 .pt-0 { padding-top: 0; }
 .mb-4 { margin-bottom: 1.5rem; }
 .mb-5 { margin-bottom: 3rem; }
-.text-muted { color: var(--color-text-muted); line-height: 1.8; font-size: 1.05rem; }
+.text-muted { color: var(--color-text-muted); line-height: 1.7; font-size: 0.95rem; }
 .w-100 { width: 100%; }
 
 .contact-grid {
@@ -175,22 +176,26 @@ const submitForm = () => {
 .info-card {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   gap: 1.5rem;
-  padding: 2rem !important;
+  padding: 1.5rem !important;
 }
 
 .info-card h4 {
+  font-size: 1rem;
   margin-bottom: 0.25rem;
 }
 
 .info-icon {
-  font-size: 2.5rem;
+  width: 28px;
+  height: 28px;
+  stroke: var(--color-primary);
+  flex-shrink: 0;
 }
 
 /* Form Styles */
 .form-card {
-  padding: 3rem !important;
+  padding: 2.5rem !important;
 }
 
 .contact-form {
@@ -207,20 +212,22 @@ const submitForm = () => {
 
 .form-group label {
   font-weight: 600;
-  font-size: 0.95rem;
-  color: var(--color-text-main);
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
-  padding: 1rem;
+  padding: 0.875rem 1rem;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   font-family: inherit;
-  font-size: 1rem;
-  background: var(--color-bg);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  font-size: 0.95rem;
+  background: white;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .form-group input:focus,
@@ -228,20 +235,22 @@ const submitForm = () => {
 .form-group textarea:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(6, 156, 106, 0.1);
+  box-shadow: 0 0 0 3px rgba(6, 78, 59, 0.1);
 }
 
 .alert-success {
-  background: #d1fae5;
-  color: #065f46;
+  background: #ECFDF5;
+  color: var(--color-primary-dark);
+  border: 1px solid #A7F3D0;
   padding: 1rem;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   margin-bottom: 1.5rem;
   font-weight: 500;
+  font-size: 0.9rem;
 }
 
 .fade-enter-active, .fade-leave-active {
-  transition: opacity 0.5s ease;
+  transition: opacity 0.3s ease;
 }
 .fade-enter-from, .fade-leave-to {
   opacity: 0;

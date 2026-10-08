@@ -6,10 +6,10 @@ import BaseCard from '../components/ui/BaseCard.vue'
   <div class="page-container">
     <section class="page-header">
       <div class="container text-center">
-        <div class="badge-sub animate-fade-up">Profil Organisasi</div>
+        <div class="badge-sub animate-fade-up">Profil Korporasi</div>
         <h1 class="page-title animate-fade-up" style="animation-delay: 0.1s">Tentang KMLC</h1>
         <p class="page-subtitle animate-fade-up" style="animation-delay: 0.2s">
-          Mengenal lebih dalam sejarah, legalitas, dan struktur kepengurusan Koperasi Konsumen Makmur Lestari Cikawung.
+          Informasi sejarah pendirian, legalitas, serta struktur direksi Koperasi Konsumen Makmur Lestari Cikawung.
         </p>
       </div>
     </section>
@@ -19,35 +19,32 @@ import BaseCard from '../components/ui/BaseCard.vue'
       <div class="container">
         <div class="about-detailed-grid">
           <div class="content-side animate-fade-up" style="animation-delay: 0.2s">
-            <h2 class="mb-4">Sejarah & Latar Belakang</h2>
+            <h2 class="mb-4">Sejarah Organisasi</h2>
             <p class="text-muted mb-4">
-              Koperasi Konsumen Makmur Lestari Cikawung (KMLC) lahir dari keprihatinan atas banyaknya lahan tidur eks-kawasan Perhutani di wilayah Desa Cikawung, Kecamatan Terisi, Kabupaten Indramayu. Lahan-lahan tersebut memiliki potensi agrikultur yang sangat besar namun belum terkelola dengan maksimal karena keterbatasan modal dan alat dari masyarakat sekitar.
+              Koperasi Konsumen Makmur Lestari Cikawung (KMLC) didirikan sebagai respon atas kurangnya optimalisasi lahan tidur eks-kawasan Perhutani di wilayah Desa Cikawung, Kabupaten Indramayu. Lahan tersebut memiliki valuasi agrikultur tinggi yang membutuhkan intervensi manajemen terstruktur.
             </p>
             <p class="text-muted mb-4">
-              Berangkat dari kondisi tersebut, pada tahun 2021, tokoh masyarakat setempat, <strong>Bapak Unang Herman</strong>, mengambil inisiatif untuk menyatukan para petani ke dalam sebuah wadah ekonomi berbadan hukum yang kuat. Melalui pendekatan persuasif kepada instansi keamanan dan dinas pemerintahan, KMLC berhasil mendapatkan izin pengelolaan lahan berbasis kemitraan.
-            </p>
-            <p class="text-muted mb-5">
-              Hingga hari ini, KMLC telah bertransformasi menjadi salah satu penyokong ketahanan pangan daerah dengan fokus utama pada budidaya jagung hibrida yang terintegrasi dari hulu ke hilir.
+              Pada tahun 2021, Bapak Unang Herman menginisiasi konsolidasi para petani lokal ke dalam satu payung hukum yang kredibel. Melalui koordinasi vertikal dengan kepolisian dan instansi pemerintahan, KMLC sukses memperoleh hak kelola lahan berbasis kemitraan berkelanjutan.
             </p>
             
             <div class="vision-mission mt-5">
               <BaseCard>
                 <div class="vm-header">
-                  <span class="vm-icon">🎯</span>
+                  <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                   <h3>Visi Koperasi</h3>
                 </div>
-                <p class="text-muted">Menjadi pilar utama ketahanan pangan nasional tingkat daerah dengan sistem pengelolaan agrikultur yang mandiri, berintegritas, dan menyejahterakan anggota.</p>
+                <p class="text-muted">Menjadi pilar strategis ketahanan pangan nasional tingkat regional melalui tata kelola agrikultur modern yang transparan dan akuntabel.</p>
               </BaseCard>
 
               <BaseCard class="mt-4">
                 <div class="vm-header">
-                  <span class="vm-icon">🚀</span>
-                  <h3>Misi Koperasi</h3>
+                  <svg class="svg-icon" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                  <h3>Misi Organisasi</h3>
                 </div>
                 <ul class="mission-list text-muted">
-                  <li>Memberdayakan Kelompok Tani Hutan (KTH) secara teknis dan finansial.</li>
-                  <li>Menerapkan prinsip tata kelola Koperasi yang jujur, transparan, dan akuntabel berbasis digitalisasi.</li>
-                  <li>Menciptakan ekosistem pasar yang adil untuk menyerap hasil panen para petani mitra.</li>
+                  <li>Inklusi finansial dan teknis bagi Kelompok Tani Hutan (KTH).</li>
+                  <li>Implementasi standar operasional prosedur yang transparan.</li>
+                  <li>Menciptakan ekosistem pasar (*supply chain*) yang efisien.</li>
                 </ul>
               </BaseCard>
             </div>
@@ -56,11 +53,7 @@ import BaseCard from '../components/ui/BaseCard.vue'
           <div class="image-side animate-fade-up" style="animation-delay: 0.3s">
             <div class="image-stack">
               <div class="img-large">
-                <img src="/assets/images/hero.jpg" alt="Kegiatan Koperasi" />
-              </div>
-              <div class="stats-card">
-                <h4 class="text-primary">Legalitas Resmi</h4>
-                <p>Terdaftar di Kemenkumham RI</p>
+                <img src="/assets/images/hero.jpg" alt="Kegiatan Operasional Koperasi" />
               </div>
             </div>
           </div>
@@ -69,27 +62,27 @@ import BaseCard from '../components/ui/BaseCard.vue'
     </section>
 
     <!-- Structural & Legal Section -->
-    <section class="section bg-light">
+    <section class="section bg-light border-top">
       <div class="container">
         <div class="text-center mb-5">
-          <h2 class="section-title">Legalitas & Kepengurusan</h2>
-          <p class="section-subtitle">Sistem tata kelola profesional dengan legalitas badan hukum yang terjamin untuk keamanan anggota.</p>
+          <h2 class="section-title">Legalitas & Manajemen</h2>
+          <p class="section-subtitle">Struktur kepengurusan profesional dengan kepatuhan hukum yang terverifikasi.</p>
         </div>
         
         <div class="legal-grid">
           <BaseCard class="legal-card animate-fade-up">
-            <h3 class="mb-4">Informasi Legalitas</h3>
+            <h3 class="mb-4">Data Korporat</h3>
             <ul class="legal-list">
-              <li><strong>Nama Badan Hukum:</strong> Koperasi Konsumen Makmur Lestari Cikawung</li>
-              <li><strong>Kedudukan:</strong> Desa Cikawung, Kec. Terisi, Kab. Indramayu</li>
-              <li><strong>Bentuk Koperasi:</strong> Koperasi Primer Nasional / Konsumen</li>
-              <li><strong>Nomor Badan Hukum:</strong> AHU-00XXXXX.AH.01.26.TAHUN 2021 (Dummy)</li>
-              <li><strong>NIB:</strong> 1234567890123 (Dummy)</li>
+              <li><strong>Entitas Hukum:</strong> Koperasi Konsumen Makmur Lestari Cikawung</li>
+              <li><strong>Domisili:</strong> Kec. Terisi, Kab. Indramayu</li>
+              <li><strong>Bentuk Organisasi:</strong> Koperasi Primer Konsumen</li>
+              <li><strong>Nomor AHU:</strong> AHU-00XXXXX.AH.01.26.TAHUN 2021</li>
+              <li><strong>NIB:</strong> 1234567890123</li>
             </ul>
           </BaseCard>
 
           <BaseCard class="legal-card animate-fade-up" style="animation-delay: 0.2s">
-            <h3 class="mb-4">Struktur Organisasi</h3>
+            <h3 class="mb-4">Dewan Direksi & Pengawas</h3>
             <div class="org-structure">
               <div class="org-item">
                 <span class="org-role">Ketua Pengurus</span>
@@ -97,15 +90,15 @@ import BaseCard from '../components/ui/BaseCard.vue'
               </div>
               <div class="org-item">
                 <span class="org-role">Sekretaris</span>
-                <span class="org-name">Bpk. Ahmad S. (Dummy)</span>
+                <span class="org-name">Ahmad S.</span>
               </div>
               <div class="org-item">
                 <span class="org-role">Bendahara</span>
-                <span class="org-name">Ibu Siti N. (Dummy)</span>
+                <span class="org-name">Siti N.</span>
               </div>
               <div class="org-item">
                 <span class="org-role">Dewan Pengawas</span>
-                <span class="org-name">Perwakilan Polres & Dinas Pertanian</span>
+                <span class="org-name">Perwakilan Kepolisian & Dinas Pertanian</span>
               </div>
             </div>
           </BaseCard>
@@ -123,10 +116,13 @@ import BaseCard from '../components/ui/BaseCard.vue'
 .bg-light {
   background-color: var(--color-bg);
 }
+.border-top {
+  border-top: 1px solid var(--color-border);
+}
 
 .page-header {
-  padding: 6rem 0 4rem 0;
-  background: var(--color-surface);
+  padding: 5rem 0 3rem 0;
+  background: white;
   border-bottom: 1px solid var(--color-border);
   margin-bottom: 4rem;
 }
@@ -135,31 +131,29 @@ import BaseCard from '../components/ui/BaseCard.vue'
   color: var(--color-primary);
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 2px;
-  font-size: 0.875rem;
+  letter-spacing: 1px;
+  font-size: 0.8rem;
   margin-bottom: 1rem;
   display: inline-block;
 }
 
 .page-title {
-  font-size: 3.5rem;
-  color: var(--color-text-main);
+  font-size: 3rem;
   margin-bottom: 1rem;
 }
 
 .page-subtitle {
-  font-size: 1.25rem;
+  font-size: 1.125rem;
   color: var(--color-text-muted);
   max-width: 800px;
   margin: 0 auto;
 }
 
-.pt-0 {
-  padding-top: 0;
-}
-
+.pt-0 { padding-top: 0; }
 .mb-4 { margin-bottom: 1.5rem; }
 .mb-5 { margin-bottom: 3rem; }
+.mt-4 { margin-top: 1.5rem; }
+.mt-5 { margin-top: 3rem; }
 
 .about-detailed-grid {
   display: grid;
@@ -168,21 +162,27 @@ import BaseCard from '../components/ui/BaseCard.vue'
   align-items: center;
 }
 
-.text-muted { color: var(--color-text-muted); line-height: 1.8; font-size: 1.05rem; }
-.text-primary { color: var(--color-primary); font-size: 2rem; font-weight: 800; }
+.text-muted { color: var(--color-text-muted); line-height: 1.8; font-size: 0.95rem; }
 
 .vm-header {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
   margin-bottom: 1rem;
 }
 
-.vm-icon {
-  font-size: 1.5rem;
-  background: var(--color-bg);
-  padding: 0.5rem;
-  border-radius: 0.5rem;
+.svg-icon {
+  width: 24px;
+  height: 24px;
+  stroke: var(--color-primary);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+.vm-header h3 {
+  font-size: 1.125rem;
 }
 
 .mission-list {
@@ -199,11 +199,14 @@ import BaseCard from '../components/ui/BaseCard.vue'
 }
 
 .mission-list li::before {
-  content: '→';
+  content: '';
   position: absolute;
   left: 0;
-  color: var(--color-primary);
-  font-weight: bold;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  background-color: var(--color-primary);
+  border-radius: 50%;
 }
 
 .image-stack {
@@ -212,29 +215,17 @@ import BaseCard from '../components/ui/BaseCard.vue'
 }
 
 .img-large {
-  border-radius: 2rem;
+  border-radius: var(--radius-md);
   overflow: hidden;
-  box-shadow: var(--shadow-lg);
   height: 100%;
-  min-height: 600px;
+  min-height: 500px;
+  border: 1px solid var(--color-border);
 }
 
 .img-large img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-
-.stats-card {
-  position: absolute;
-  bottom: -2rem;
-  left: -2rem;
-  background: white;
-  padding: 2rem;
-  border-radius: 1rem;
-  box-shadow: var(--shadow-xl);
-  text-align: center;
-  border: 1px solid var(--color-border);
 }
 
 .legal-grid {
@@ -254,6 +245,7 @@ import BaseCard from '../components/ui/BaseCard.vue'
   display: flex;
   justify-content: space-between;
   color: var(--color-text-muted);
+  font-size: 0.95rem;
 }
 
 .legal-list li:last-child {
@@ -270,13 +262,13 @@ import BaseCard from '../components/ui/BaseCard.vue'
   display: flex;
   flex-direction: column;
   background: var(--color-bg);
-  padding: 1rem 1.5rem;
-  border-radius: var(--radius-md);
-  border-left: 4px solid var(--color-primary);
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--color-primary);
 }
 
 .org-role {
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   color: var(--color-text-muted);
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -285,7 +277,7 @@ import BaseCard from '../components/ui/BaseCard.vue'
 }
 
 .org-name {
-  font-size: 1.125rem;
+  font-size: 1rem;
   font-weight: 700;
   color: var(--color-text-main);
 }
@@ -296,9 +288,6 @@ import BaseCard from '../components/ui/BaseCard.vue'
   }
   .img-large {
     min-height: 400px;
-  }
-  .stats-card {
-    left: 2rem;
   }
   .legal-list li {
     flex-direction: column;
