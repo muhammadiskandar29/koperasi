@@ -38,7 +38,7 @@ import BaseCard from '../components/ui/BaseCard.vue'
             <!-- Institutional Partner 2 -->
             <BaseCard class="partner-card">
               <div class="partner-icon">
-                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M17 18a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2"/></svg><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><circle cx="12" cy="10" r="2"/></svg>
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M17 18a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2"/><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><circle cx="12" cy="10" r="2"/></svg>
               </div>
               <h4>Perum Perhutani KPH</h4>
               <p class="text-muted">Penyedia konsesi Hak Guna Lahan eks-kawasan hutan untuk dioptimalisasi melalui skema kemitraan kehutanan sosial.</p>
