@@ -27,8 +27,10 @@ onUnmounted(() => {
       
       <nav class="nav-links">
         <router-link to="/" class="nav-link" active-class="active-link">Beranda</router-link>
-        <router-link to="/tentang" class="nav-link" active-class="active-link">Tentang Kami</router-link>
-        <router-link to="/program" class="nav-link" active-class="active-link">Program</router-link>
+        <router-link to="/tentang" class="nav-link" active-class="active-link">Profil Korporasi</router-link>
+        <router-link to="/program" class="nav-link" active-class="active-link">Layanan Koperasi</router-link>
+        <router-link to="/laporan" class="nav-link" active-class="active-link">Laporan Kinerja</router-link>
+        <router-link to="/mitra" class="nav-link" active-class="active-link">Kemitraan</router-link>
       </nav>
 
       <div class="nav-action">
