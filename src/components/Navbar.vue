@@ -32,7 +32,7 @@ onUnmounted(() => {
       </nav>
 
       <div class="nav-action">
-        <a href="#kontak" class="btn btn-primary nav-btn">Hubungi Kami</a>
+        <router-link to="/kontak" class="btn btn-primary nav-btn">Hubungi Kami</router-link>
       </div>
     </div>
   </header>
