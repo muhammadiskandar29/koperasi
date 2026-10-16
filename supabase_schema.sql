@@ -1,6 +1,7 @@
 -- ==============================================================================
 -- SKEMA DATABASE SUPABASE UNTUK KOPERASI KONSUMEN MAKMUR LESTARI CIKAWUNG (KMLC)
 -- Jalankan query ini di menu: Supabase Dashboard -> SQL Editor -> New Query -> Run
+-- Aman dijalankan berulang kali (Idempotent / No Conflict)
 -- ==============================================================================
 
 -- 1. Tabel Statistik & Capaian (Ditampilkan di Beranda)
@@ -13,14 +14,15 @@ CREATE TABLE IF NOT EXISTS koperasi_stats (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- Data Default Statistik
+-- Data Awal Statistik
 INSERT INTO koperasi_stats (id, label, value, description, sort_order)
 VALUES 
     ('lahan', 'Lahan Produktif Dikelola', '50+', 'Hektar lahan agrikultur aktif', 1),
     ('anggota', 'Anggota KTH Terdaftar', '120+', 'Petani & pekebun binaan', 2),
     ('panen', 'Estimasi Panen Tahunan', '1.5K', 'Ton komoditas jagung & palawija', 3),
     ('aset', 'Total Aset Koperasi', 'Rp 1.2M', 'Akumulasi permodalan & saprotan', 4)
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT (id) DO UPDATE 
+SET label = EXCLUDED.label, value = EXCLUDED.value, description = EXCLUDED.description;
 
 -- 2. Tabel Berita, Kegiatan & Laporan
 CREATE TABLE IF NOT EXISTS koperasi_news (
@@ -35,33 +37,36 @@ CREATE TABLE IF NOT EXISTS koperasi_news (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- Data Default Berita Kegiatan
+-- Data Awal Berita Kegiatan
 INSERT INTO koperasi_news (title, category, image_url, summary, content, is_published)
-VALUES 
-    (
-        'Panen Raya Jagung Musim Pertama Bersama Polres Indramayu',
-        'Laporan Kegiatan',
-        '/assets/images/harvest.jpg',
-        'Kegiatan panen raya berhasil dilaksanakan pada lahan agrikultur seluas 15 Hektar. Proses ini disaksikan oleh perwakilan kepolisian dan otoritas desa setempat.',
-        'Koperasi Konsumen Makmur Lestari Cikawung berhasil merealisasikan panen raya perdana tahun ini dengan produktivitas tinggi. Hasil panen langsung didistribusikan melalui kemitraan strategis.',
-        true
-    ),
-    (
-        'Penyuluhan Pemupukan Berimbang dan Penggunaan Bibit Hibrida',
-        'Edukasi Anggota',
-        '/assets/images/hero.jpg',
-        'Fasilitasi pelatihan langsung bersama praktisi agronomis untuk mengoptimalkan kuantitas serta daya tahan bulir jagung binaan.',
-        'Penyuluhan berkala diberikan kepada anggota KTH untuk memastikan teknik penanaman dan pemeliharaan sesuai standar budidaya modern berkelanjutan.',
-        true
-    ),
-    (
-        'Rapat Anggota Tahunan (RAT) dan Penetapan Rencana Kerja',
-        'Kelembagaan',
-        '/assets/images/harvest.jpg',
-        'Pertanggungjawaban keuangan tahun buku berjalan serta perumusan program strategis kemitraan agrikultur jangka panjang.',
-        'Seluruh anggota menyepakati laporan pertanggungjawaban pengurus serta rencana ekspansi unit usaha pengolahan pakan ternak terpadu.',
-        true
-    );
+SELECT 
+    'Panen Raya Jagung Musim Pertama Bersama Polres Indramayu',
+    'Laporan Kegiatan',
+    '/assets/images/harvest.jpg',
+    'Kegiatan panen raya berhasil dilaksanakan pada lahan agrikultur seluas 15 Hektar. Proses ini disaksikan oleh perwakilan kepolisian dan otoritas desa setempat.',
+    'Koperasi Konsumen Makmur Lestari Cikawung berhasil merealisasikan panen raya perdana tahun ini dengan produktivitas tinggi. Hasil panen langsung didistribusikan melalui kemitraan strategis.',
+    true
+WHERE NOT EXISTS (SELECT 1 FROM koperasi_news WHERE title = 'Panen Raya Jagung Musim Pertama Bersama Polres Indramayu');
+
+INSERT INTO koperasi_news (title, category, image_url, summary, content, is_published)
+SELECT 
+    'Penyuluhan Pemupukan Berimbang dan Penggunaan Bibit Hibrida',
+    'Edukasi Anggota',
+    '/assets/images/hero.jpg',
+    'Fasilitasi pelatihan langsung bersama praktisi agronomis untuk mengoptimalkan kuantitas serta daya tahan bulir jagung binaan.',
+    'Penyuluhan berkala diberikan kepada anggota KTH untuk memastikan teknik penanaman dan pemeliharaan sesuai standar budidaya modern berkelanjutan.',
+    true
+WHERE NOT EXISTS (SELECT 1 FROM koperasi_news WHERE title = 'Penyuluhan Pemupukan Berimbang dan Penggunaan Bibit Hibrida');
+
+INSERT INTO koperasi_news (title, category, image_url, summary, content, is_published)
+SELECT 
+    'Rapat Anggota Tahunan (RAT) dan Penetapan Rencana Kerja',
+    'Kelembagaan',
+    '/assets/images/harvest.jpg',
+    'Pertanggungjawaban keuangan tahun buku berjalan serta perumusan program strategis kemitraan agrikultur jangka panjang.',
+    'Seluruh anggota menyepakati laporan pertanggungjawaban pengurus serta rencana ekspansi unit usaha pengolahan pakan ternak terpadu.',
+    true
+WHERE NOT EXISTS (SELECT 1 FROM koperasi_news WHERE title = 'Rapat Anggota Tahunan (RAT) dan Penetapan Rencana Kerja');
 
 -- 3. Tabel Program & Layanan Usaha
 CREATE TABLE IF NOT EXISTS koperasi_programs (
@@ -74,30 +79,33 @@ CREATE TABLE IF NOT EXISTS koperasi_programs (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- Data Default Program
+-- Data Awal Program
 INSERT INTO koperasi_programs (title, badge, description, benefits, is_active)
-VALUES 
-    (
-        'Kemitraan Budidaya Jagung Hibrida',
-        'Sektor Utama',
-        'Penyediaan bibit unggul, sarana produksi pertanian, serta pendampingan teknis intensif dari tanam hingga panen.',
-        ARRAY['Jaminan Pasar & Off-taker', 'Bibit Bersertifikat', 'Pendampingan Agronomis'],
-        true
-    ),
-    (
-        'Pengadaan Pupuk & Saprotan Bersubsidi',
-        'Layanan Anggota',
-        'Penyaluran pupuk resmi, pestisida terdaftar, dan alat mesin pertanian untuk mendukung efisiensi operasional.',
-        ARRAY['Harga Terstandar', 'Stok Terjamin', 'Distribusi Tepat Waktu'],
-        true
-    ),
-    (
-        'Simpan Pinjam Produktif Agrikultur',
-        'Finansial',
-        'Akses permodalan modal kerja bagi petani anggota dengan mekanisme bagi hasil yang adil dan transparan.',
-        ARRAY['Bunga Rendah Ramah Petani', 'Proses Cepat', 'Syarat Ringan'],
-        true
-    );
+SELECT 
+    'Kemitraan Budidaya Jagung Hibrida',
+    'Sektor Utama',
+    'Penyediaan bibit unggul, sarana produksi pertanian, serta pendampingan teknis intensif dari tanam hingga panen.',
+    ARRAY['Jaminan Pasar & Off-taker', 'Bibit Bersertifikat', 'Pendampingan Agronomis'],
+    true
+WHERE NOT EXISTS (SELECT 1 FROM koperasi_programs WHERE title = 'Kemitraan Budidaya Jagung Hibrida');
+
+INSERT INTO koperasi_programs (title, badge, description, benefits, is_active)
+SELECT 
+    'Pengadaan Pupuk & Saprotan Bersubsidi',
+    'Layanan Anggota',
+    'Penyaluran pupuk resmi, pestisida terdaftar, dan alat mesin pertanian untuk mendukung efisiensi operasional.',
+    ARRAY['Harga Terstandar', 'Stok Terjamin', 'Distribusi Tepat Waktu'],
+    true
+WHERE NOT EXISTS (SELECT 1 FROM koperasi_programs WHERE title = 'Pengadaan Pupuk & Saprotan Bersubsidi');
+
+INSERT INTO koperasi_programs (title, badge, description, benefits, is_active)
+SELECT 
+    'Simpan Pinjam Produktif Agrikultur',
+    'Finansial',
+    'Akses permodalan modal kerja bagi petani anggota dengan mekanisme bagi hasil yang adil dan transparan.',
+    ARRAY['Bunga Rendah Ramah Petani', 'Proses Cepat', 'Syarat Ringan'],
+    true
+WHERE NOT EXISTS (SELECT 1 FROM koperasi_programs WHERE title = 'Simpan Pinjam Produktif Agrikultur');
 
 -- 4. Tabel Pesan Masuk / Pengaduan Masyarakat
 CREATE TABLE IF NOT EXISTS koperasi_messages (
@@ -118,12 +126,99 @@ CREATE TABLE IF NOT EXISTS koperasi_content (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
+-- Data Awal Konten Dinamis
+INSERT INTO koperasi_content (id, payload)
+VALUES 
+    (
+        'hero',
+        '{
+            "badge": "Koperasi Konsumen Makmur Lestari Cikawung",
+            "title": "Membangun Kesejahteraan Melalui Ketahanan Pangan",
+            "subtitle": "Mengoptimalkan potensi lahan dan memberdayakan masyarakat Cikawung untuk mencapai kemandirian ekonomi yang inklusif dan berkelanjutan.",
+            "primaryBtnText": "Jelajahi KMLC",
+            "secondaryBtnText": "Lihat Program",
+            "heroImage": "/assets/images/hero.jpg"
+        }'::jsonb
+    ),
+    (
+        'profile',
+        '{
+            "name": "Koperasi Konsumen Makmur Lestari Cikawung",
+            "shortName": "KMLC",
+            "tagline": "Institusi Koperasi Konsumen bersertifikasi, berdedikasi membangun resiliensi finansial agrikultur melalui manajemen profesional.",
+            "address": "Desa Cikawung, Kec. Terisi, Kab. Indramayu, Jawa Barat 45262",
+            "phone": "(0234) 567890",
+            "mobile": "0812-3456-7890",
+            "email": "korespondensi@kmlc.co.id",
+            "operatingHours": "Senin - Jumat: 08:00 - 16:00 WIB",
+            "legalNumber": "AHU-0012345.AH.01.26.TAHUN 2021",
+            "nib": "1234567890123"
+        }'::jsonb
+    ),
+    (
+        'about',
+        '{
+            "historyP1": "Koperasi Konsumen Makmur Lestari Cikawung (KMLC) didirikan sebagai respon atas kurangnya optimalisasi lahan tidur eks-kawasan Perhutani di wilayah Desa Cikawung, Kabupaten Indramayu. Lahan tersebut memiliki valuasi agrikultur tinggi yang membutuhkan intervensi manajemen terstruktur.",
+            "historyP2": "Pada tahun 2021, Bapak Unang Herman menginisiasi konsolidasi para petani lokal ke dalam satu payung hukum yang kredibel. Melalui koordinasi vertikal dengan kepolisian dan instansi pemerintahan, KMLC sukses memperoleh hak kelola lahan berbasis kemitraan berkelanjutan.",
+            "vision": "Menjadi pilar strategis ketahanan pangan nasional tingkat regional melalui tata kelola agrikultur modern yang transparan dan akuntabel.",
+            "missions": [
+                "Inklusi finansial dan teknis bagi Kelompok Tani Hutan (KTH).",
+                "Implementasi standar operasional prosedur yang transparan.",
+                "Menciptakan ekosistem pasar (supply chain) yang efisien."
+            ],
+            "founderName": "Unang Herman",
+            "founderTitle": "Ketua / Inisiator KMLC",
+            "secretaryName": "Ahmad Subagja, S.P.",
+            "treasurerName": "Hj. Siti Nurhaliza",
+            "supervisorName": "Perwakilan Kepolisian & Dinas Pertanian",
+            "aboutImage": "/assets/images/hero.jpg"
+        }'::jsonb
+    ),
+    (
+        'partners',
+        '[
+            { "id": 1, "name": "Polres Indramayu", "category": "Penegakan Hukum", "description": "Mitra strategis dalam pengawasan keamanan lahan, memitigasi konflik agraria, dan edukasi hukum bagi masyarakat petani." },
+            { "id": 2, "name": "Perum Perhutani KPH", "category": "Kawasan Hutan", "description": "Penyedia konsesi Hak Guna Lahan eks-kawasan hutan untuk dioptimalisasi melalui skema kemitraan kehutanan sosial." },
+            { "id": 3, "name": "Dinas Pertanian", "category": "Pemerintah", "description": "Pemberi bimbingan teknis (Bimtek) budidaya jagung hibrida, sertifikasi lahan, serta fasilitator pupuk bersubsidi." },
+            { "id": 4, "name": "Bank BJB Syariah", "category": "Perbankan", "description": "Fasilitator permodalan KUR Klaster Pertanian dengan margin rendah khusus anggota KMLC." }
+        ]'::jsonb
+    ),
+    (
+        'reports',
+        '[
+            { "id": 1, "title": "Laporan Pertanggungjawaban RAT Tahun Buku 2025", "year": "2025", "status": "Disetujui RAT", "downloadUrl": "#" },
+            { "id": 2, "title": "Laporan Keuangan & Audit Neraca Semester II", "year": "2025", "status": "Terverifikasi Akuntan", "downloadUrl": "#" },
+            { "id": 3, "title": "Laporan Distribusi SHU & Partisipasi Anggota", "year": "2025", "status": "Selesai Dicairkan", "downloadUrl": "#" }
+        ]'::jsonb
+    ),
+    (
+        'faqs',
+        '[
+            { "id": 1, "question": "Apa syarat untuk menjadi anggota KMLC?", "answer": "Warga negara Indonesia, berdomisili atau memiliki aktivitas pertanian di wilayah Indramayu dan sekitarnya, serta bersedia mematuhi AD/ART koperasi." },
+            { "id": 2, "question": "Bagaimana mekanisme pembagian SHU?", "answer": "SHU dibagikan setahun sekali pasca RAT berdasarkan proporsi transaksi dan simpanan masing-masing anggota secara transparan." },
+            { "id": 3, "question": "Apakah KMLC menyediakan bantuan bibit dan pupuk?", "answer": "Ya, melalui unit usaha saprotan, anggota mendapatkan alokasi bibit jagung hibrida bersertifikat serta pupuk terstandar." }
+        ]'::jsonb
+    )
+ON CONFLICT (id) DO NOTHING;
+
 -- Izinkan Akses Publik (Row Level Security / RLS)
 ALTER TABLE koperasi_stats ENABLE ROW LEVEL SECURITY;
 ALTER TABLE koperasi_news ENABLE ROW LEVEL SECURITY;
 ALTER TABLE koperasi_programs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE koperasi_messages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE koperasi_content ENABLE ROW LEVEL SECURITY;
+
+-- Drop Policy yang lama jika sudah ada (mencegah error duplikasi)
+DROP POLICY IF EXISTS "Public Read Stats" ON koperasi_stats;
+DROP POLICY IF EXISTS "Public Read News" ON koperasi_news;
+DROP POLICY IF EXISTS "Public Read Programs" ON koperasi_programs;
+DROP POLICY IF EXISTS "Public Read Content" ON koperasi_content;
+DROP POLICY IF EXISTS "Public Insert Messages" ON koperasi_messages;
+DROP POLICY IF EXISTS "Admin Full Stats" ON koperasi_stats;
+DROP POLICY IF EXISTS "Admin Full News" ON koperasi_news;
+DROP POLICY IF EXISTS "Admin Full Programs" ON koperasi_programs;
+DROP POLICY IF EXISTS "Admin Full Messages" ON koperasi_messages;
+DROP POLICY IF EXISTS "Admin Full Content" ON koperasi_content;
 
 -- Policy: Publik bisa membaca konten
 CREATE POLICY "Public Read Stats" ON koperasi_stats FOR SELECT USING (true);
@@ -140,4 +235,3 @@ CREATE POLICY "Admin Full News" ON koperasi_news FOR ALL USING (true);
 CREATE POLICY "Admin Full Programs" ON koperasi_programs FOR ALL USING (true);
 CREATE POLICY "Admin Full Messages" ON koperasi_messages FOR ALL USING (true);
 CREATE POLICY "Admin Full Content" ON koperasi_content FOR ALL USING (true);
-
