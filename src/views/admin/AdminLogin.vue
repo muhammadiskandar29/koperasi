@@ -3,8 +3,8 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-const email = ref('admin@kmlc.id')
-const password = ref('admin123')
+const email = ref('')
+const password = ref('')
 const isLoading = ref(false)
 const errorMessage = ref('')
 
@@ -84,7 +84,8 @@ const handleLogin = async () => {
           </div>
 
           <div class="credential-hint">
-            <span>💡 Akun default: <strong>admin@kmlc.id</strong> | Sandi: <strong>admin123</strong></span>
+            <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            <span>Akun Default: <strong>admin@kmlc.id</strong> | Sandi: <strong>admin123</strong></span>
           </div>
 
           <button type="submit" class="btn-submit" :disabled="isLoading">
@@ -202,6 +203,9 @@ const handleLogin = async () => {
 }
 
 .credential-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   background: #F0FDF4;
   border: 1px dashed #86EFAC;
   padding: 0.6rem 0.8rem;
