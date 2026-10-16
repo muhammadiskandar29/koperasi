@@ -1,19 +1,22 @@
 <script setup>
+import { useRoute } from 'vue-router'
 import Navbar from './components/Navbar.vue'
 import AppFooter from './components/Footer.vue'
+
+const route = useRoute()
 </script>
 
 <template>
   <div class="app-wrapper">
-    <Navbar />
-    <main class="main-content">
+    <Navbar v-if="!route.meta.layout && !route.path.startsWith('/admin')" />
+    <main :class="['main-content', { 'admin-main': route.meta.layout || route.path.startsWith('/admin') }]">
       <router-view v-slot="{ Component }">
         <transition name="fade" mode="out-in">
           <component :is="Component" />
         </transition>
       </router-view>
     </main>
-    <AppFooter />
+    <AppFooter v-if="!route.meta.layout && !route.path.startsWith('/admin')" />
   </div>
 </template>
 

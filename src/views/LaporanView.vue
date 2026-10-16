@@ -1,5 +1,21 @@
 <script setup>
+import { ref, onMounted } from 'vue'
 import BaseCard from '../components/ui/BaseCard.vue'
+
+const reportsList = ref([
+  { id: 1, title: 'Laporan Pertanggungjawaban RAT Tahun Buku 2025', year: '2025', status: 'Disetujui RAT', downloadUrl: '#' },
+  { id: 2, title: 'Laporan Keuangan & Audit Neraca Semester II', year: '2025', status: 'Terverifikasi Akuntan', downloadUrl: '#' },
+  { id: 3, title: 'Laporan Distribusi SHU & Partisipasi Anggota', year: '2025', status: 'Selesai Dicairkan', downloadUrl: '#' }
+])
+
+onMounted(async () => {
+  try {
+    const res = await fetch('/api/content?section=reports').then(r => r.json())
+    if (res.success && res.data && res.data.length > 0) {
+      reportsList.value = res.data
+    }
+  } catch (e) {}
+})
 </script>
 
 <template>
@@ -91,15 +107,23 @@ import BaseCard from '../components/ui/BaseCard.vue'
           </BaseCard>
         </div>
 
-        <div class="download-section mt-5 animate-fade-up" style="animation-delay: 0.3s">
-          <div class="download-content">
-            <h3>Dokumen Publikasi RAT 2025</h3>
-            <p class="text-muted">Unduh laporan audit independen dan prospektus keuangan tahunan.</p>
+        <div class="download-section-wrapper mt-5 animate-fade-up" style="animation-delay: 0.3s">
+          <div class="mb-4">
+            <h2>Dokumen Publikasi RAT & Laporan Keuangan</h2>
+            <p class="text-muted">Unduh laporan audit independen dan prospektus keuangan tahunan yang telah diverifikasi.</p>
           </div>
-          <button class="btn btn-primary" disabled style="opacity: 0.7; cursor: not-allowed;">
-            <svg class="svg-icon" style="width: 18px; height: 18px;" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-            Unduh Laporan (PDF)
-          </button>
+          <div class="reports-stack" style="display: flex; flex-direction: column; gap: 1rem;">
+            <div v-for="rep in reportsList" :key="rep.id" class="download-section" style="margin: 0;">
+              <div class="download-content">
+                <h3>{{ rep.title }}</h3>
+                <p class="text-muted">Tahun Buku: {{ rep.year }} • Status: <strong>{{ rep.status }}</strong></p>
+              </div>
+              <a :href="rep.downloadUrl || '#'" target="_blank" class="btn btn-primary">
+                <svg class="svg-icon" style="width: 18px; height: 18px;" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                Unduh Berkas (PDF)
+              </a>
+            </div>
+          </div>
         </div>
 
       </div>

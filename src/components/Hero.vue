@@ -1,39 +1,75 @@
+<script setup>
+import { ref, onMounted } from 'vue'
+
+const heroData = ref({
+  badge: 'Koperasi Konsumen Makmur Lestari Cikawung',
+  title: 'Membangun Kesejahteraan Melalui Ketahanan Pangan',
+  subtitle: 'Mengoptimalkan potensi lahan dan memberdayakan masyarakat Cikawung untuk mencapai kemandirian ekonomi yang inklusif dan berkelanjutan.',
+  primaryBtnText: 'Jelajahi KMLC',
+  secondaryBtnText: 'Lihat Program',
+  heroImage: '/assets/images/hero.jpg'
+})
+
+const heroStats = ref([
+  { val: '50+', label: 'Hektar Lahan' },
+  { val: '120+', label: 'Mitra Petani' }
+])
+
+onMounted(async () => {
+  try {
+    const res = await fetch('/api/content?section=hero&t=' + Date.now()).then(r => r.json())
+    if (res.success && res.data) {
+      heroData.value = { ...heroData.value, ...res.data }
+    }
+  } catch (e) {}
+
+  try {
+    const statsRes = await fetch('/api/stats?t=' + Date.now()).then(r => r.json())
+    if (statsRes.success && statsRes.data && statsRes.data.length >= 2) {
+      heroStats.value = [
+        { val: statsRes.data[0].value, label: statsRes.data[0].label },
+        { val: statsRes.data[1].value, label: statsRes.data[1].label }
+      ]
+    }
+  } catch (e) {}
+})
+</script>
+
 <template>
   <section id="beranda" class="hero">
     <div class="container hero-container">
       <div class="hero-content">
-        <div class="badge animate-fade-up">Koperasi Konsumen Makmur Lestari Cikawung</div>
+        <div class="badge animate-fade-up">{{ heroData.badge }}</div>
         <h1 class="hero-title animate-fade-up" style="animation-delay: 0.1s">
-          Membangun <span class="text-gradient">Kesejahteraan</span> <br/>
-          Melalui Ketahanan Pangan
+          {{ heroData.title }}
         </h1>
         <p class="hero-subtitle animate-fade-up" style="animation-delay: 0.2s">
-          Mengoptimalkan potensi lahan dan memberdayakan masyarakat Cikawung untuk mencapai kemandirian ekonomi yang inklusif dan berkelanjutan.
+          {{ heroData.subtitle }}
         </p>
         <div class="hero-actions animate-fade-up" style="animation-delay: 0.3s">
-          <a href="#tentang" class="btn btn-primary">
-            Jelajahi KMLC
+          <router-link to="/tentang" class="btn btn-primary">
+            {{ heroData.primaryBtnText }}
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-          </a>
-          <a href="#program" class="btn btn-outline">Lihat Program</a>
+          </router-link>
+          <router-link to="/program" class="btn btn-outline">{{ heroData.secondaryBtnText }}</router-link>
         </div>
         
         <div class="stats-row animate-fade-up" style="animation-delay: 0.4s">
-          <div class="stat-item">
-            <h3 class="stat-value">50+</h3>
-            <p class="stat-label">Hektar Lahan</p>
+          <div class="stat-item" v-if="heroStats[0]">
+            <h3 class="stat-value">{{ heroStats[0].val }}</h3>
+            <p class="stat-label">{{ heroStats[0].label }}</p>
           </div>
-          <div class="stat-divider"></div>
-          <div class="stat-item">
-            <h3 class="stat-value">120</h3>
-            <p class="stat-label">Mitra Petani</p>
+          <div class="stat-divider" v-if="heroStats[0] && heroStats[1]"></div>
+          <div class="stat-item" v-if="heroStats[1]">
+            <h3 class="stat-value">{{ heroStats[1].val }}</h3>
+            <p class="stat-label">{{ heroStats[1].label }}</p>
           </div>
         </div>
       </div>
       
       <div class="hero-visual animate-fade-up" style="animation-delay: 0.2s">
         <div class="hero-image-wrapper">
-          <img src="/assets/images/hero.jpg" alt="Pertanian KMLC" class="hero-img" />
+          <img :src="heroData.heroImage || '/assets/images/hero.jpg'" alt="Pertanian KMLC" class="hero-img" />
           <div class="glow-effect"></div>
         </div>
       </div>

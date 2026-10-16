@@ -1,0 +1,218 @@
+{
+  "stats": [
+    {
+      "id": "lahan",
+      "label": "Lahan Produktif Dikelola",
+      "value": "50+",
+      "description": "Hektar lahan agrikultur aktif",
+      "sort_order": 1
+    },
+    {
+      "id": "anggota",
+      "label": "Anggota KTH Terdaftar",
+      "value": "120+",
+      "description": "Petani & pekebun binaan",
+      "sort_order": 2
+    },
+    {
+      "id": "panen",
+      "label": "Estimasi Panen Tahunan",
+      "value": "1.5K",
+      "description": "Ton komoditas jagung & palawija",
+      "sort_order": 3
+    },
+    {
+      "id": "aset",
+      "label": "Total Aset Koperasi",
+      "value": "Rp 1.2M",
+      "description": "Akumulasi permodalan & saprotan",
+      "sort_order": 4
+    }
+  ],
+  "news": [
+    {
+      "id": 1,
+      "title": "Panen Raya Jagung Musim Pertama Bersama Polres Indramayu",
+      "category": "Laporan Kegiatan",
+      "image_url": "/assets/images/harvest.jpg",
+      "summary": "Kegiatan panen raya berhasil dilaksanakan pada lahan agrikultur seluas 15 Hektar. Proses ini disaksikan oleh perwakilan kepolisian dan otoritas desa setempat.",
+      "content": "Koperasi Konsumen Makmur Lestari Cikawung berhasil merealisasikan panen raya perdana tahun ini dengan produktivitas tinggi. Hasil panen langsung didistribusikan melalui kemitraan strategis.",
+      "is_published": true,
+      "created_at": "2026-10-16T04:00:26.760Z"
+    },
+    {
+      "id": 2,
+      "title": "Penyuluhan Pemupukan Berimbang dan Penggunaan Bibit Hibrida",
+      "category": "Edukasi Anggota",
+      "image_url": "/assets/images/hero.jpg",
+      "summary": "Fasilitasi pelatihan langsung bersama praktisi agronomis untuk mengoptimalkan kuantitas serta daya tahan bulir jagung binaan.",
+      "content": "Penyuluhan berkala diberikan kepada anggota KTH untuk memastikan teknik penanaman dan pemeliharaan sesuai standar budidaya modern berkelanjutan.",
+      "is_published": true,
+      "created_at": "2026-10-14T04:00:26.760Z"
+    },
+    {
+      "id": 3,
+      "title": "Rapat Anggota Tahunan (RAT) dan Penetapan Rencana Kerja",
+      "category": "Kelembagaan",
+      "image_url": "/assets/images/harvest.jpg",
+      "summary": "Pertanggungjawaban keuangan tahun buku berjalan serta perumusan program strategis kemitraan agrikultur jangka panjang.",
+      "content": "Seluruh anggota menyepakati laporan pertanggungjawaban pengurus serta rencana ekspansi unit usaha pengolahan pakan ternak terpadu.",
+      "is_published": true,
+      "created_at": "2026-10-11T04:00:26.760Z"
+    }
+  ],
+  "programs": [
+    {
+      "id": 1,
+      "title": "Kemitraan Budidaya Jagung Hibrida",
+      "badge": "Sektor Utama",
+      "description": "Penyediaan bibit unggul, sarana produksi pertanian, serta pendampingan teknis intensif dari tanam hingga panen.",
+      "benefits": [
+        "Jaminan Pasar & Off-taker",
+        "Bibit Bersertifikat",
+        "Pendampingan Agronomis"
+      ],
+      "is_active": true
+    },
+    {
+      "id": 2,
+      "title": "Pengadaan Pupuk & Saprotan Bersubsidi",
+      "badge": "Layanan Anggota",
+      "description": "Penyaluran pupuk resmi, pestisida terdaftar, dan alat mesin pertanian untuk mendukung efisiensi operasional.",
+      "benefits": [
+        "Harga Terstandar",
+        "Stok Terjamin",
+        "Distribusi Tepat Waktu"
+      ],
+      "is_active": true
+    },
+    {
+      "id": 3,
+      "title": "Simpan Pinjam Produktif Agrikultur",
+      "badge": "Finansial",
+      "description": "Akses permodalan modal kerja bagi petani anggota dengan mekanisme bagi hasil yang adil dan transparan.",
+      "benefits": [
+        "Bunga Rendah Ramah Petani",
+        "Proses Cepat",
+        "Syarat Ringan"
+      ],
+      "is_active": true
+    }
+  ],
+  "messages": [
+    {
+      "id": 1,
+      "name": "Budi Santoso",
+      "email": "budi@example.com",
+      "phone": "081234567890",
+      "subject": "Pertanyaan Program Kemitraan KTH",
+      "message": "Selamat siang pengurus KMLC, saya ingin menanyakan prosedur pendaftaran kelompok tani desa tetangga untuk ikut kemitraan jagung.",
+      "is_read": false,
+      "created_at": "2026-10-16T01:00:26.760Z"
+    }
+  ],
+  "content": {
+    "hero": {
+      "badge": "Koperasi Konsumen Makmur Lestari Cikawung",
+      "title": "Membangun Kesejahteraan Melalui Ketahanan Pangan",
+      "subtitle": "Mengoptimalkan potensi lahan dan memberdayakan masyarakat Cikawung untuk mencapai kemandirian ekonomi yang inklusif dan berkelanjutan.",
+      "primaryBtnText": "Jelajahi KMLC",
+      "secondaryBtnText": "Lihat Program",
+      "heroImage": "/assets/images/hero.jpg"
+    },
+    "profile": {
+      "name": "Koperasi Konsumen Makmur Lestari Cikawung",
+      "shortName": "KMLC",
+      "tagline": "Institusi Koperasi Konsumen bersertifikasi, berdedikasi membangun resiliensi finansial agrikultur melalui manajemen profesional.",
+      "address": "Desa Cikawung, Kec. Terisi, Kab. Indramayu, Jawa Barat 45262",
+      "phone": "(0234) 567890",
+      "mobile": "0812-3456-7890",
+      "email": "korespondensi@kmlc.co.id",
+      "operatingHours": "Senin - Jumat: 08:00 - 16:00 WIB",
+      "legalNumber": "AHU-0012345.AH.01.26.TAHUN 2021",
+      "nib": "1234567890123"
+    },
+    "about": {
+      "historyP1": "Koperasi Konsumen Makmur Lestari Cikawung (KMLC) didirikan sebagai respon atas kurangnya optimalisasi lahan tidur eks-kawasan Perhutani di wilayah Desa Cikawung, Kabupaten Indramayu. Lahan tersebut memiliki valuasi agrikultur tinggi yang membutuhkan intervensi manajemen terstruktur.",
+      "historyP2": "Pada tahun 2021, Bapak Unang Herman menginisiasi konsolidasi para petani lokal ke dalam satu payung hukum yang kredibel. Melalui koordinasi vertikal dengan kepolisian dan instansi pemerintahan, KMLC sukses memperoleh hak kelola lahan berbasis kemitraan berkelanjutan.",
+      "vision": "Menjadi pilar strategis ketahanan pangan nasional tingkat regional melalui tata kelola agrikultur modern yang transparan dan akuntabel.",
+      "missions": [
+        "Inklusi finansial dan teknis bagi Kelompok Tani Hutan (KTH).",
+        "Implementasi standar operasional prosedur yang transparan.",
+        "Menciptakan ekosistem pasar (supply chain) yang efisien."
+      ],
+      "founderName": "Unang Herman",
+      "founderTitle": "Ketua / Inisiator KMLC",
+      "secretaryName": "Ahmad S.",
+      "treasurerName": "Siti N.",
+      "supervisorName": "Perwakilan Kepolisian & Dinas Pertanian",
+      "aboutImage": "/assets/images/hero.jpg"
+    },
+    "partners": [
+      {
+        "id": 1,
+        "name": "Polres Indramayu",
+        "category": "Penegakan Hukum",
+        "description": "Mitra strategis dalam pengawasan keamanan lahan, memitigasi konflik agraria, dan edukasi hukum bagi masyarakat petani."
+      },
+      {
+        "id": 2,
+        "name": "Perum Perhutani KPH",
+        "category": "Kawasan Hutan",
+        "description": "Penyedia konsesi Hak Guna Lahan eks-kawasan hutan untuk dioptimalisasi melalui skema kemitraan kehutanan sosial."
+      },
+      {
+        "id": 3,
+        "name": "Dinas Pertanian",
+        "category": "Pemerintah",
+        "description": "Pemberi bimbingan teknis (Bimtek) budidaya jagung hibrida, sertifikasi lahan, serta fasilitator pupuk bersubsidi."
+      },
+      {
+        "id": 4,
+        "name": "Bank BJB Syariah",
+        "category": "Perbankan",
+        "description": "Fasilitator permodalan KUR Klaster Pertanian dengan margin rendah khusus anggota KMLC."
+      }
+    ],
+    "reports": [
+      {
+        "id": 1,
+        "title": "Laporan Pertanggungjawaban RAT Tahun Buku 2025",
+        "year": "2025",
+        "status": "Disetujui RAT",
+        "downloadUrl": "#"
+      },
+      {
+        "id": 2,
+        "title": "Laporan Keuangan & Audit Neraca Semester II",
+        "year": "2025",
+        "status": "Terverifikasi Akuntan",
+        "downloadUrl": "#"
+      },
+      {
+        "id": 3,
+        "title": "Laporan Distribusi SHU & Partisipasi Anggota",
+        "year": "2025",
+        "status": "Selesai Dicairkan",
+        "downloadUrl": "#"
+      }
+    ],
+    "faqs": [
+      {
+        "id": 1,
+        "question": "Apa syarat untuk menjadi anggota KMLC?",
+        "answer": "Warga negara Indonesia, berdomisili atau memiliki aktivitas pertanian di wilayah Indramayu dan sekitarnya, serta bersedia mematuhi AD/ART koperasi."
+      },
+      {
+        "id": 2,
+        "question": "Bagaimana mekanisme pembagian SHU?",
+        "answer": "SHU dibagikan setahun sekali pasca RAT berdasarkan proporsi transaksi dan simpanan masing-masing anggota secara transparan."
+      },
+      {
+        "id": 3,
+        "question": "Apakah KMLC menyediakan bantuan bibit dan pupuk?",
+        "answer": "Ya, melalui unit usaha saprotan, anggota mendapatkan alokasi bibit jagung hibrida bersertifikat serta pupuk terstandar."
+      }
+    ]
+  }
+}

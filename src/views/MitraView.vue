@@ -1,5 +1,22 @@
 <script setup>
+import { ref, onMounted } from 'vue'
 import BaseCard from '../components/ui/BaseCard.vue'
+
+const partnersList = ref([
+  { id: 1, name: 'Polres Indramayu', category: 'Penegakan Hukum', description: 'Mitra strategis dalam pengawasan keamanan lahan, memitigasi konflik agraria, dan edukasi hukum bagi masyarakat petani.' },
+  { id: 2, name: 'Perum Perhutani KPH', category: 'Kawasan Hutan', description: 'Penyedia konsesi Hak Guna Lahan eks-kawasan hutan untuk dioptimalisasi melalui skema kemitraan kehutanan sosial.' },
+  { id: 3, name: 'Dinas Pertanian', category: 'Pemerintah', description: 'Pemberi bimbingan teknis (Bimtek) budidaya jagung hibrida, sertifikasi lahan, serta fasilitator pupuk bersubsidi.' },
+  { id: 4, name: 'Bank BJB Syariah', category: 'Perbankan', description: 'Fasilitator permodalan KUR Klaster Pertanian dengan margin rendah khusus anggota KMLC.' }
+])
+
+onMounted(async () => {
+  try {
+    const res = await fetch('/api/content?section=partners').then(r => r.json())
+    if (res.success && res.data && res.data.length > 0) {
+      partnersList.value = res.data
+    }
+  } catch (e) {}
+})
 </script>
 
 <template>
@@ -26,40 +43,12 @@ import BaseCard from '../components/ui/BaseCard.vue'
           </div>
 
           <div class="partners-grid">
-            <!-- Institutional Partner 1 -->
-            <BaseCard class="partner-card">
+            <BaseCard v-for="p in partnersList" :key="p.id" class="partner-card">
               <div class="partner-icon">
                 <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
               </div>
-              <h4>Polres Indramayu</h4>
-              <p class="text-muted">Mitra strategis dalam pengawasan keamanan lahan, memitigasi konflik agraria, dan edukasi hukum bagi masyarakat petani.</p>
-            </BaseCard>
-
-            <!-- Institutional Partner 2 -->
-            <BaseCard class="partner-card">
-              <div class="partner-icon">
-                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M17 18a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2"/><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><circle cx="12" cy="10" r="2"/></svg>
-              </div>
-              <h4>Perum Perhutani KPH</h4>
-              <p class="text-muted">Penyedia konsesi Hak Guna Lahan eks-kawasan hutan untuk dioptimalisasi melalui skema kemitraan kehutanan sosial.</p>
-            </BaseCard>
-
-            <!-- Institutional Partner 3 -->
-            <BaseCard class="partner-card">
-              <div class="partner-icon">
-                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
-              </div>
-              <h4>Dinas Pertanian</h4>
-              <p class="text-muted">Pemberi bimbingan teknis (Bimtek) budidaya jagung hibrida, sertifikasi lahan, serta fasilitator pupuk bersubsidi.</p>
-            </BaseCard>
-
-            <!-- Institutional Partner 4 -->
-            <BaseCard class="partner-card">
-              <div class="partner-icon">
-                <svg class="svg-icon" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-              </div>
-              <h4>Bank BUMD (BJB/BRI)</h4>
-              <p class="text-muted">Fasilitator inklusi keuangan syariah dan kredit usaha rakyat (KUR) guna ekspansi modal Koperasi.</p>
+              <h4>{{ p.name }}</h4>
+              <p class="text-muted">{{ p.description }}</p>
             </BaseCard>
           </div>
         </div>

@@ -1,6 +1,13 @@
 <script setup>
 import BaseCard from '../components/ui/BaseCard.vue'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+
+const profileData = ref({
+  address: 'Desa Cikawung, Kec. Terisi, Kab. Indramayu, Jawa Barat 45262',
+  phone: '(0234) 567890',
+  mobile: '0812-3456-7890',
+  email: 'korespondensi@kmlc.co.id'
+})
 
 const formData = ref({
   name: '',
@@ -10,14 +17,41 @@ const formData = ref({
 })
 
 const isSubmitted = ref(false)
+const isSubmitting = ref(false)
 
-const submitForm = () => {
-  // Simulate network request
-  setTimeout(() => {
+onMounted(async () => {
+  try {
+    const res = await fetch('/api/content?section=profile').then(r => r.json())
+    if (res.success && res.data) {
+      profileData.value = { ...profileData.value, ...res.data }
+    }
+  } catch (e) {}
+})
+
+const submitForm = async () => {
+  isSubmitting.value = true
+  try {
+    await fetch('/api/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: formData.value.name,
+        phone: formData.value.phone,
+        subject: 'Permohonan: ' + formData.value.topic,
+        message: formData.value.message
+      })
+    })
     isSubmitted.value = true
     formData.value = { name: '', phone: '', topic: 'kemitraan', message: '' }
     setTimeout(() => isSubmitted.value = false, 5000)
-  }, 800)
+  } catch (err) {
+    console.error('Gagal kirim pesan:', err)
+    // fallback UX
+    isSubmitted.value = true
+    setTimeout(() => isSubmitted.value = false, 5000)
+  } finally {
+    isSubmitting.value = false
+  }
 }
 </script>
 
@@ -49,7 +83,7 @@ const submitForm = () => {
                 <svg class="svg-icon info-icon" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                 <div>
                   <h4>Alamat Sekretariat</h4>
-                  <p class="text-muted">Desa Cikawung, Kec. Terisi,<br>Kab. Indramayu, Jawa Barat 45262</p>
+                  <p class="text-muted">{{ profileData.address }}</p>
                 </div>
               </BaseCard>
 
@@ -57,7 +91,7 @@ const submitForm = () => {
                 <svg class="svg-icon info-icon" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                 <div>
                   <h4>Kontak Telepon</h4>
-                  <p class="text-muted">Hunting: (0234) 567890<br>Direct: 0812-3456-7890</p>
+                  <p class="text-muted">Hunting: {{ profileData.phone }}<br>Direct / WA: {{ profileData.mobile }}</p>
                 </div>
               </BaseCard>
 
@@ -65,7 +99,7 @@ const submitForm = () => {
                 <svg class="svg-icon info-icon" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                 <div>
                   <h4>Surel Elektronik</h4>
-                  <p class="text-muted">korespondensi@kmlc.co.id<br>kemitraan@kmlc.co.id</p>
+                  <p class="text-muted">{{ profileData.email }}</p>
                 </div>
               </BaseCard>
             </div>

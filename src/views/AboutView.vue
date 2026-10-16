@@ -1,5 +1,46 @@
 <script setup>
+import { ref, onMounted } from 'vue'
 import BaseCard from '../components/ui/BaseCard.vue'
+
+const aboutData = ref({
+  historyP1: 'Koperasi Konsumen Makmur Lestari Cikawung (KMLC) didirikan sebagai respon atas kurangnya optimalisasi lahan tidur eks-kawasan Perhutani di wilayah Desa Cikawung, Kabupaten Indramayu. Lahan tersebut memiliki valuasi agrikultur tinggi yang membutuhkan intervensi manajemen terstruktur.',
+  historyP2: 'Pada tahun 2021, Bapak Unang Herman menginisiasi konsolidasi para petani lokal ke dalam satu payung hukum yang kredibel. Melalui koordinasi vertikal dengan kepolisian dan instansi pemerintahan, KMLC sukses memperoleh hak kelola lahan berbasis kemitraan berkelanjutan.',
+  vision: 'Menjadi pilar strategis ketahanan pangan nasional tingkat regional melalui tata kelola agrikultur modern yang transparan dan akuntabel.',
+  missions: [
+    'Inklusi finansial dan teknis bagi Kelompok Tani Hutan (KTH).',
+    'Implementasi standar operasional prosedur yang transparan.',
+    'Menciptakan ekosistem pasar (supply chain) yang efisien.'
+  ],
+  founderName: 'Unang Herman',
+  founderTitle: 'Ketua / Inisiator KMLC',
+  secretaryName: 'Ahmad S.',
+  treasurerName: 'Siti N.',
+  supervisorName: 'Perwakilan Kepolisian & Dinas Pertanian',
+  aboutImage: '/assets/images/hero.jpg'
+})
+
+const profileData = ref({
+  name: 'Koperasi Konsumen Makmur Lestari Cikawung',
+  address: 'Kec. Terisi, Kab. Indramayu',
+  legalNumber: 'AHU-0012345.AH.01.26.TAHUN 2021',
+  nib: '1234567890123'
+})
+
+onMounted(async () => {
+  try {
+    const res = await fetch('/api/content?section=about&t=' + Date.now()).then(r => r.json())
+    if (res.success && res.data) {
+      aboutData.value = { ...aboutData.value, ...res.data }
+    }
+  } catch (e) {}
+
+  try {
+    const pRes = await fetch('/api/content?section=profile&t=' + Date.now()).then(r => r.json())
+    if (pRes.success && pRes.data) {
+      profileData.value = { ...profileData.value, ...pRes.data }
+    }
+  } catch (e) {}
+})
 </script>
 
 <template>
@@ -21,10 +62,10 @@ import BaseCard from '../components/ui/BaseCard.vue'
           <div class="content-side animate-fade-up" style="animation-delay: 0.2s">
             <h2 class="mb-4">Sejarah Organisasi</h2>
             <p class="text-muted mb-4">
-              Koperasi Konsumen Makmur Lestari Cikawung (KMLC) didirikan sebagai respon atas kurangnya optimalisasi lahan tidur eks-kawasan Perhutani di wilayah Desa Cikawung, Kabupaten Indramayu. Lahan tersebut memiliki valuasi agrikultur tinggi yang membutuhkan intervensi manajemen terstruktur.
+              {{ aboutData.historyP1 }}
             </p>
-            <p class="text-muted mb-4">
-              Pada tahun 2021, Bapak Unang Herman menginisiasi konsolidasi para petani lokal ke dalam satu payung hukum yang kredibel. Melalui koordinasi vertikal dengan kepolisian dan instansi pemerintahan, KMLC sukses memperoleh hak kelola lahan berbasis kemitraan berkelanjutan.
+            <p class="text-muted mb-4" v-if="aboutData.historyP2">
+              {{ aboutData.historyP2 }}
             </p>
             
             <div class="vision-mission mt-5">
@@ -33,7 +74,7 @@ import BaseCard from '../components/ui/BaseCard.vue'
                   <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                   <h3>Visi Koperasi</h3>
                 </div>
-                <p class="text-muted">Menjadi pilar strategis ketahanan pangan nasional tingkat regional melalui tata kelola agrikultur modern yang transparan dan akuntabel.</p>
+                <p class="text-muted">{{ aboutData.vision }}</p>
               </BaseCard>
 
               <BaseCard class="mt-4">
@@ -42,9 +83,7 @@ import BaseCard from '../components/ui/BaseCard.vue'
                   <h3>Misi Organisasi</h3>
                 </div>
                 <ul class="mission-list text-muted">
-                  <li>Inklusi finansial dan teknis bagi Kelompok Tani Hutan (KTH).</li>
-                  <li>Implementasi standar operasional prosedur yang transparan.</li>
-                  <li>Menciptakan ekosistem pasar (*supply chain*) yang efisien.</li>
+                  <li v-for="(m, i) in aboutData.missions" :key="i">{{ m }}</li>
                 </ul>
               </BaseCard>
             </div>
@@ -53,7 +92,7 @@ import BaseCard from '../components/ui/BaseCard.vue'
           <div class="image-side animate-fade-up" style="animation-delay: 0.3s">
             <div class="image-stack">
               <div class="img-large">
-                <img src="/assets/images/hero.jpg" alt="Kegiatan Operasional Koperasi" />
+                <img :src="aboutData.aboutImage || '/assets/images/hero.jpg'" alt="Kegiatan Operasional Koperasi" />
               </div>
             </div>
           </div>
@@ -73,11 +112,11 @@ import BaseCard from '../components/ui/BaseCard.vue'
           <BaseCard class="legal-card animate-fade-up">
             <h3 class="mb-4">Data Korporat</h3>
             <ul class="legal-list">
-              <li><strong>Entitas Hukum:</strong> Koperasi Konsumen Makmur Lestari Cikawung</li>
-              <li><strong>Domisili:</strong> Kec. Terisi, Kab. Indramayu</li>
+              <li><strong>Entitas Hukum:</strong> {{ profileData.name }}</li>
+              <li><strong>Domisili:</strong> {{ profileData.address }}</li>
               <li><strong>Bentuk Organisasi:</strong> Koperasi Primer Konsumen</li>
-              <li><strong>Nomor AHU:</strong> AHU-00XXXXX.AH.01.26.TAHUN 2021</li>
-              <li><strong>NIB:</strong> 1234567890123</li>
+              <li><strong>Nomor AHU:</strong> {{ profileData.legalNumber }}</li>
+              <li><strong>NIB:</strong> {{ profileData.nib }}</li>
             </ul>
           </BaseCard>
 
@@ -85,20 +124,20 @@ import BaseCard from '../components/ui/BaseCard.vue'
             <h3 class="mb-4">Dewan Direksi & Pengawas</h3>
             <div class="org-structure">
               <div class="org-item">
-                <span class="org-role">Ketua Pengurus</span>
-                <span class="org-name">Unang Herman</span>
+                <span class="org-role">{{ aboutData.founderTitle || 'Ketua Pengurus' }}</span>
+                <span class="org-name">{{ aboutData.founderName || 'Unang Herman' }}</span>
               </div>
               <div class="org-item">
                 <span class="org-role">Sekretaris</span>
-                <span class="org-name">Ahmad S.</span>
+                <span class="org-name">{{ aboutData.secretaryName || 'Ahmad S.' }}</span>
               </div>
               <div class="org-item">
                 <span class="org-role">Bendahara</span>
-                <span class="org-name">Siti N.</span>
+                <span class="org-name">{{ aboutData.treasurerName || 'Siti N.' }}</span>
               </div>
               <div class="org-item">
                 <span class="org-role">Dewan Pengawas</span>
-                <span class="org-name">Perwakilan Kepolisian & Dinas Pertanian</span>
+                <span class="org-name">{{ aboutData.supervisorName || 'Perwakilan Kepolisian & Dinas Pertanian' }}</span>
               </div>
             </div>
           </BaseCard>

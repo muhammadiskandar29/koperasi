@@ -1,5 +1,45 @@
 <script setup>
+import { ref, onMounted } from 'vue'
 import BaseCard from '../components/ui/BaseCard.vue'
+
+const programsList = ref([
+  {
+    id: 1,
+    title: 'Pembiayaan Koperasi Mikro',
+    badge: 'Finansial',
+    description: 'Unit Simpan Pinjam (KSP) KMLC berfokus pada penyaluran kredit produktif bagi para anggota untuk memastikan tidak adanya hambatan operasional akibat kendala likuiditas.',
+    benefits: ['Plafon pinjaman khusus sarana produksi pertanian', 'Sistem bagi hasil disesuaikan siklus panen', 'Pencairan dana tepat waktu tanpa jaminan memberatkan', 'Fasilitas simpanan terkelola transparan']
+  },
+  {
+    id: 2,
+    title: 'Pengembangan SDM Pertanian',
+    badge: 'Edukasi',
+    description: 'Divisi edukasi KMLC menyelenggarakan pelatihan intensif untuk meningkatkan standar kompetensi dan kualitas hidup Kelompok Tani Hutan (KTH) binaan kami.',
+    benefits: ['Pelatihan pencegahan hama dan penyakit', 'Sertifikasi dan standarisasi mutu hasil panen', 'Workshop literasi keuangan bagi petani', 'Edukasi keselamatan kerja lapangan']
+  }
+])
+
+const selectedProgram = ref(null)
+const showProgramModal = ref(false)
+
+const openProgramDetail = (prog) => {
+  selectedProgram.value = prog
+  showProgramModal.value = true
+}
+
+const closeProgramDetail = () => {
+  showProgramModal.value = false
+  selectedProgram.value = null
+}
+
+onMounted(async () => {
+  try {
+    const res = await fetch('/api/programs?t=' + Date.now()).then(r => r.json())
+    if (res.success && res.data && res.data.length > 0) {
+      programsList.value = res.data.filter(p => p.is_active !== false)
+    }
+  } catch (e) {}
+})
 </script>
 
 <template>
@@ -55,43 +95,69 @@ import BaseCard from '../components/ui/BaseCard.vue'
 
         <hr class="divider my-5" />
 
-        <!-- Core Program 2 & 3: Finance and Education -->
+        <!-- Dynamic Programs List from API -->
         <div class="other-programs-grid">
-          <BaseCard class="animate-fade-up">
+          <BaseCard v-for="(prog, idx) in programsList" :key="prog.id" class="animate-fade-up" :style="{ animationDelay: (idx * 0.1) + 's' }">
             <div class="icon-wrapper">
-              <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              <span class="prog-badge">{{ prog.badge || 'Layanan' }}</span>
             </div>
-            <h3 class="title">Pembiayaan Koperasi Mikro</h3>
-            <p class="desc mb-4">
-              Unit Simpan Pinjam (KSP) KMLC berfokus pada penyaluran kredit produktif bagi para anggota untuk memastikan tidak adanya hambatan operasional akibat kendala likuiditas.
-            </p>
-            <ul class="feature-list">
-              <li>Plafon pinjaman khusus sarana produksi pertanian.</li>
-              <li>Sistem bagi hasil yang disesuaikan dengan siklus panen.</li>
-              <li>Pencairan dana tepat waktu tanpa jaminan memberatkan.</li>
-              <li>Fasilitas simpanan wajib dan pokok yang terkelola transparan.</li>
+            <h3 class="title mt-2">{{ prog.title }}</h3>
+            <p class="desc mb-4">{{ prog.description }}</p>
+            <ul class="feature-list" v-if="prog.benefits && prog.benefits.length">
+              <li v-for="(b, i) in prog.benefits" :key="i">{{ b }}</li>
             </ul>
-          </BaseCard>
-
-          <BaseCard class="animate-fade-up" style="animation-delay: 0.1s">
-            <div class="icon-wrapper">
-              <svg class="svg-icon" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            <div class="card-footer-action">
+              <button type="button" class="btn-detail-link" @click="openProgramDetail(prog)">
+                Detail Layanan &rarr;
+              </button>
             </div>
-            <h3 class="title">Pengembangan SDM Pertanian</h3>
-            <p class="desc mb-4">
-              Divisi edukasi KMLC menyelenggarakan pelatihan intensif untuk meningkatkan standar kompetensi dan kualitas hidup Kelompok Tani Hutan (KTH) binaan kami.
-            </p>
-            <ul class="feature-list">
-              <li>Pelatihan pencegahan hama dan penyakit tanaman.</li>
-              <li>Sertifikasi dan standarisasi mutu hasil panen.</li>
-              <li>Workshop literasi keuangan bagi keluarga petani.</li>
-              <li>Edukasi keselamatan kerja lapangan terpadu.</li>
-            </ul>
           </BaseCard>
         </div>
 
       </div>
     </section>
+
+    <!-- Modal Detail Program Layanan -->
+    <div v-if="showProgramModal && selectedProgram" class="program-modal-overlay" @click.self="closeProgramDetail">
+      <div class="program-modal-card">
+        <button class="modal-close-btn" @click="closeProgramDetail" title="Tutup">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+
+        <div class="modal-content-area">
+          <span class="modal-program-badge">{{ selectedProgram.badge || 'Program Unggulan' }}</span>
+          <h2 class="modal-headline">{{ selectedProgram.title }}</h2>
+
+          <div class="modal-description-box">
+            {{ selectedProgram.description }}
+          </div>
+
+          <div class="modal-benefits-section" v-if="selectedProgram.benefits && selectedProgram.benefits.length">
+            <h4 class="benefits-heading">Fasilitas & Keuntungan Anggota:</h4>
+            <div class="benefits-grid-list">
+              <div v-for="(b, bIdx) in selectedProgram.benefits" :key="bIdx" class="benefit-check-row">
+                <span class="check-icon">✓</span>
+                <span>{{ b }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer-line">
+            <a 
+              :href="'https://wa.me/6281234567890?text=' + encodeURIComponent('Halo Pengurus KMLC, saya ingin menanyakan informasi mengenai program ' + selectedProgram.title)" 
+              target="_blank" 
+              class="btn btn-primary"
+            >
+              Konsultasi Program via WhatsApp
+            </a>
+            <button type="button" class="btn btn-secondary" @click="closeProgramDetail">Tutup</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -273,5 +339,192 @@ import BaseCard from '../components/ui/BaseCard.vue'
   .other-programs-grid { gap: 1.5rem; }
   .icon-wrapper svg { width: 28px; height: 28px; }
   .title { font-size: 1.15rem; }
+}
+
+.card-footer-action {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border, #E2E8F0);
+}
+
+.btn-detail-link {
+  background: none;
+  border: none;
+  color: var(--color-primary, #047857);
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.2s ease;
+}
+
+.btn-detail-link:hover {
+  color: var(--color-primary-dark, #022C22);
+  gap: 0.55rem;
+}
+
+/* Modal Detail Program */
+.program-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 1.5rem;
+}
+
+.program-modal-card {
+  background: #FFFFFF;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 650px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  animation: modalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalPop {
+  from { opacity: 0; transform: scale(0.96) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 34px;
+  height: 34px;
+  background: #F1F5F9;
+  border: 1px solid #E2E8F0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #0F172A;
+  z-index: 10;
+  transition: all 0.15s ease;
+}
+
+.modal-close-btn:hover {
+  background: #E2E8F0;
+}
+
+.modal-content-area {
+  padding: 2.25rem;
+}
+
+.modal-program-badge {
+  display: inline-block;
+  background: #ECFDF5;
+  color: #047857;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.65rem;
+  border-radius: 4px;
+  border: 1px solid #A7F3D0;
+  margin-bottom: 0.85rem;
+}
+
+.modal-headline {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #0F172A;
+  margin: 0 0 1rem 0;
+}
+
+.modal-description-box {
+  background: #F8FAFC;
+  border-left: 3px solid #047857;
+  padding: 1rem 1.25rem;
+  font-size: 0.95rem;
+  color: #334155;
+  line-height: 1.6;
+  border-radius: 0 6px 6px 0;
+  margin-bottom: 1.5rem;
+}
+
+.modal-benefits-section {
+  margin-bottom: 2rem;
+}
+
+.benefits-heading {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #1E293B;
+  margin-bottom: 0.75rem;
+}
+
+.benefits-grid-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.benefit-check-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-size: 0.92rem;
+  color: #334155;
+}
+
+.check-icon {
+  color: #047857;
+  font-weight: 800;
+}
+
+.modal-footer-line {
+  padding-top: 1.25rem;
+  border-top: 1px solid #E2E8F0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1.25rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s ease;
+}
+
+.btn-primary {
+  background: #047857;
+  color: #FFFFFF;
+}
+
+.btn-primary:hover {
+  background: #065F46;
+}
+
+.btn-secondary {
+  background: #F1F5F9;
+  color: #334155;
+  border: 1px solid #CBD5E1;
+}
+
+.btn-secondary:hover {
+  background: #E2E8F0;
 }
 </style>
