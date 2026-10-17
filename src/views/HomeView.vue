@@ -509,4 +509,81 @@ const closeNewsDetail = () => {
   display: flex;
   justify-content: flex-end;
 }
+
+@media (max-width: 480px) {
+  .highlights-grid {
+    padding: 1rem 0.75rem;
+    margin-top: -0.5rem;
+    gap: 1rem;
+    border-radius: 8px;
+  }
+  .highlight-item h2 {
+    font-size: 1.55rem;
+  }
+  .highlight-item p {
+    font-size: 0.75rem;
+  }
+  .divider-vertical {
+    width: 60%;
+  }
+  .news-img-wrapper {
+    height: 145px;
+  }
+  .news-content {
+    padding: 0.85rem 1rem;
+  }
+  .news-content h3 {
+    font-size: 0.98rem;
+    line-height: 1.3;
+  }
+  .news-content p {
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+  .read-more-btn {
+    font-size: 0.85rem;
+  }
+  .news-modal-overlay {
+    padding: 0.4rem;
+  }
+  .news-modal-card {
+    border-radius: 10px;
+    max-height: 94vh;
+  }
+  .modal-cover-wrap {
+    height: 160px;
+  }
+  .modal-category-chip {
+    bottom: 0.65rem;
+    left: 0.85rem;
+    font-size: 0.68rem;
+    padding: 0.2rem 0.55rem;
+  }
+  .modal-content-area {
+    padding: 0.9rem 1rem 1.25rem;
+  }
+  .modal-meta-line {
+    font-size: 0.75rem;
+    gap: 0.35rem;
+  }
+  .modal-headline {
+    font-size: 1.15rem;
+    line-height: 1.3;
+    margin-bottom: 0.65rem;
+  }
+  .modal-summary-box {
+    font-size: 0.82rem;
+    padding: 0.6rem 0.75rem;
+    margin-bottom: 0.85rem;
+    border-left-width: 3px;
+  }
+  .modal-body-paragraphs {
+    font-size: 0.84rem;
+    line-height: 1.55;
+    margin-bottom: 1.25rem;
+  }
+  .modal-footer-line .btn {
+    width: 100%;
+  }
+}
 </style>

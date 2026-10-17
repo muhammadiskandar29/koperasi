@@ -297,10 +297,30 @@ const submitForm = async () => {
 }
 
 @media (max-width: 768px) {
-  .page-title { font-size: 2.25rem; }
-  .page-header { padding: 3rem 0; margin-bottom: 2rem; }
-  .contact-grid { gap: 2rem; }
-  .form-card { padding: 1.5rem !important; }
-  .info-card { padding: 1.25rem !important; flex-direction: column; align-items: flex-start; gap: 1rem; }
+  .page-title { font-size: 1.85rem; }
+  .page-header { padding: 2.25rem 0; margin-bottom: 1.5rem; }
+  .contact-grid { gap: 1.5rem; }
+  .form-card { padding: 1.25rem !important; }
+  .info-card { padding: 1rem !important; flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+}
+
+@media (max-width: 480px) {
+  .page-title { font-size: 1.5rem; line-height: 1.3; }
+  .page-header { padding: 1.75rem 0; margin-bottom: 1rem; }
+  .page-subtitle { font-size: 0.85rem; line-height: 1.5; }
+  .contact-grid { gap: 1.25rem; }
+  .form-card { padding: 1rem !important; border-radius: 8px; }
+  .form-card h3 { font-size: 1.15rem; margin-bottom: 0.25rem; }
+  .form-card p { font-size: 0.82rem; margin-bottom: 1rem !important; }
+  .form-group { gap: 0.35rem; }
+  .form-group label { font-size: 0.72rem; }
+  .form-group input, .form-group select, .form-group textarea {
+    padding: 0.65rem 0.75rem;
+    font-size: 0.85rem;
+  }
+  .info-card { padding: 0.85rem !important; border-radius: 6px; }
+  .info-content h4 { font-size: 0.85rem; }
+  .info-content p { font-size: 0.82rem; }
+  .btn-submit { width: 100%; padding: 0.75rem; font-size: 0.88rem; }
 }
 </style>

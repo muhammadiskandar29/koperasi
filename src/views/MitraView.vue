@@ -263,10 +263,27 @@ onMounted(async () => {
   .partners-grid {
     grid-template-columns: 1fr;
   }
-  .page-title { font-size: 2.25rem; }
-  .page-header { padding: 3rem 0; margin-bottom: 2rem; }
-  .partner-card { padding: 1.5rem !important; }
-  .supply-chain { padding: 1.5rem; }
-  .chain-node { padding: 1.25rem 1rem; }
+  .page-title { font-size: 1.85rem; }
+  .page-header { padding: 2.25rem 0; margin-bottom: 1.5rem; }
+  .partner-card { padding: 1.25rem !important; }
+  .supply-chain { padding: 1.25rem; }
+  .chain-node { padding: 1rem 0.85rem; }
+}
+
+@media (max-width: 480px) {
+  .page-title { font-size: 1.5rem; line-height: 1.3; }
+  .page-header { padding: 1.75rem 0; margin-bottom: 1rem; }
+  .page-subtitle { font-size: 0.85rem; line-height: 1.5; }
+  .network-text h2 { font-size: 1.25rem; margin-bottom: 0.75rem; }
+  .network-text p { font-size: 0.85rem; line-height: 1.6; }
+  .partners-grid { gap: 0.85rem; }
+  .partner-card { padding: 1rem !important; border-radius: 8px; }
+  .partner-card h4 { font-size: 1rem; margin-bottom: 0.35rem; }
+  .partner-card p { font-size: 0.82rem; line-height: 1.5; }
+  .supply-chain { padding: 1rem; border-radius: 8px; }
+  .supply-chain h3 { font-size: 1.15rem; margin-bottom: 1rem; }
+  .chain-node { padding: 0.85rem 0.65rem; border-radius: 6px; }
+  .chain-node h5 { font-size: 0.92rem; }
+  .node-desc { font-size: 0.7rem; }
 }
 </style>

@@ -509,7 +509,10 @@ onMounted(() => {
         <router-link to="/" class="brand-link">
           <span class="logo-mark">KMLC</span>
         </router-link>
-        <span class="badge-role">Admin</span>
+        <div class="sidebar-brand-right">
+          <span class="badge-role">Admin</span>
+          <button @click="handleLogout" class="btn-logout-mobile" title="Keluar">Keluar</button>
+        </div>
       </div>
 
       <nav class="sidebar-menu">
@@ -2512,6 +2515,29 @@ onMounted(() => {
   to { transform: rotate(360deg); }
 }
 
+.sidebar-brand-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-logout-mobile {
+  display: none;
+  background: rgba(239, 68, 68, 0.2);
+  color: #FCA5A5;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-logout-mobile:hover {
+  background: #EF4444;
+  color: #FFFFFF;
+}
+
 @media (max-width: 900px) {
   .cms-layout {
     flex-direction: column;
@@ -2519,14 +2545,167 @@ onMounted(() => {
   .cms-sidebar {
     width: 100%;
     height: auto;
-    position: static;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.15);
+  }
+  .sidebar-brand {
+    padding: 0.65rem 1rem;
+  }
+  .btn-logout-mobile {
+    display: inline-block;
+  }
+  .sidebar-menu {
+    flex-direction: row;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 0.4rem 0.65rem;
+    gap: 0.35rem;
+    -webkit-overflow-scrolling: touch;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .menu-label {
+    display: none;
+  }
+  .menu-btn {
+    width: auto;
+    flex-shrink: 0;
+    padding: 0.45rem 0.75rem;
+    font-size: 0.8rem;
+    border-radius: 6px;
+  }
+  .sidebar-footer {
+    display: none;
+  }
+  .cms-main {
+    width: 100%;
+    min-width: 0;
+  }
+  .cms-topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+  .topbar-left h1 {
+    font-size: 1.25rem;
+  }
+  .topbar-sub {
+    font-size: 0.8rem;
+  }
+  .topbar-right {
+    width: 100%;
+    display: flex;
+    gap: 0.5rem;
+  }
+  .topbar-right .btn {
+    flex: 1;
+    font-size: 0.85rem;
+    padding: 0.65rem;
+    text-align: center;
+    justify-content: center;
+  }
+  .cms-content {
+    padding: 1rem 0.75rem;
   }
   .quick-overview-grid {
     grid-template-columns: 1fr;
+    gap: 0.75rem;
   }
   .form-row {
     flex-direction: column;
     gap: 0;
+  }
+  .form-card {
+    padding: 1.15rem 1rem;
+    border-radius: 8px;
+  }
+  .form-header h2 {
+    font-size: 1.15rem;
+  }
+  .form-header p {
+    font-size: 0.8rem;
+  }
+  .data-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+  }
+  .data-table {
+    min-width: 580px;
+  }
+  .data-table th, .data-table td {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.82rem;
+  }
+  .modal-backdrop {
+    padding: 0.4rem;
+  }
+  .modal-window {
+    max-height: 94vh;
+    border-radius: 8px;
+    width: 100%;
+  }
+  .modal-header {
+    padding: 0.85rem 1rem;
+  }
+  .modal-header h3 {
+    font-size: 1rem;
+  }
+  .modal-body {
+    padding: 0.85rem 1rem;
+  }
+  .modal-footer {
+    padding: 0.75rem 1rem;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .modal-footer .btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .cms-content {
+    padding: 0.75rem 0.5rem;
+  }
+  .topbar-left h1 {
+    font-size: 1.15rem;
+  }
+  .topbar-sub {
+    font-size: 0.75rem;
+  }
+  .kpi-card {
+    padding: 0.75rem;
+  }
+  .kpi-val {
+    font-size: 1.35rem;
+  }
+  .kpi-label {
+    font-size: 0.72rem;
+  }
+  .form-card {
+    padding: 0.85rem 0.75rem;
+  }
+  .form-input, .form-textarea, .form-select {
+    padding: 0.55rem 0.65rem;
+    font-size: 0.85rem;
+  }
+  .form-group label {
+    font-size: 0.75rem;
+  }
+  .btn-save-primary, .btn-submit-panel {
+    width: 100%;
+    padding: 0.75rem;
+  }
+  .mission-input-row {
+    gap: 0.35rem;
+  }
+  .btn-action {
+    width: 28px;
+    height: 28px;
+    font-size: 0.8rem;
   }
 }
 </style>

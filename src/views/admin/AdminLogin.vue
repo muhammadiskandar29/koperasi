@@ -253,4 +253,46 @@ const handleLogin = async () => {
 .back-link:hover {
   text-decoration: underline;
 }
+
+@media (max-width: 480px) {
+  .login-wrapper {
+    padding: 1rem 0.75rem;
+  }
+  .login-card {
+    padding: 1.5rem 1.15rem;
+    border-radius: 12px;
+  }
+  .brand-header {
+    margin-bottom: 1.25rem;
+  }
+  .logo {
+    font-size: 1.65rem;
+    margin-bottom: 0.5rem;
+  }
+  .brand-header h2 {
+    font-size: 1.15rem;
+  }
+  .brand-header p {
+    font-size: 0.78rem;
+  }
+  .form-group label {
+    font-size: 0.78rem;
+  }
+  .form-group input {
+    padding: 0.68rem 0.75rem;
+    font-size: 0.88rem;
+  }
+  .credential-hint {
+    font-size: 0.72rem;
+    padding: 0.5rem 0.65rem;
+  }
+  .btn-submit {
+    padding: 0.75rem;
+    font-size: 0.88rem;
+  }
+  .login-footer {
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+  }
+}
 </style>

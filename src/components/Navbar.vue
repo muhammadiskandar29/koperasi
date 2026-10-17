@@ -185,5 +185,38 @@ onUnmounted(() => {
 @media (max-width: 992px) {
   .desktop-only { display: none; }
   .mobile-only { display: block; }
+  .navbar {
+    padding: 0.85rem 0;
+  }
+  .navbar-scrolled {
+    padding: 0.75rem 0;
+  }
+  .logo-text {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 0.75rem 0;
+  }
+  .logo-text {
+    font-size: 1.2rem;
+  }
+  .hamburger {
+    padding: 0.25rem;
+  }
+  .hamburger .svg-icon {
+    width: 24px;
+    height: 24px;
+  }
+  .mobile-nav-links {
+    padding: 1rem 1.25rem 1.5rem;
+    gap: 0.75rem;
+  }
+  .mobile-link {
+    font-size: 0.95rem;
+    padding-bottom: 0.4rem;
+  }
 }
 </style>

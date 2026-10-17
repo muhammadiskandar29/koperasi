@@ -175,7 +175,42 @@ onMounted(async () => {
 @media (max-width: 992px) {
   .footer-grid {
     grid-template-columns: 1fr;
-    gap: 3rem;
+    gap: 2.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer {
+    padding: 3rem 0 1.75rem;
+  }
+  .footer-grid {
+    gap: 1.5rem;
+  }
+  .footer-desc {
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+  .footer-title {
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+  }
+  .footer-links ul {
+    gap: 0.65rem;
+  }
+  .footer-links a {
+    font-size: 0.85rem;
+  }
+  .contact-item {
+    font-size: 0.82rem;
+    gap: 0.5rem;
+  }
+  .contact-item .svg-icon {
+    width: 16px;
+    height: 16px;
+  }
+  .footer-bottom {
+    padding-top: 1.25rem;
+    font-size: 0.75rem;
   }
 }
 </style>

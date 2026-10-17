@@ -295,12 +295,29 @@ onMounted(async () => {
 }
 
 @media (max-width: 768px) {
-  .page-title { font-size: 2.25rem; }
-  .page-header { padding: 3rem 0; margin-bottom: 2rem; }
-  .metrics-grid { grid-template-columns: 1fr; gap: 1rem; }
-  .report-card { padding: 1.5rem !important; }
-  .download-section { padding: 1.5rem; text-align: left; align-items: flex-start; }
-  .download-content h3 { font-size: 1.15rem; }
-  .metric-value { font-size: 1.15rem; }
+  .page-title { font-size: 1.85rem; }
+  .page-header { padding: 2.25rem 0; margin-bottom: 1.5rem; }
+  .metrics-grid { grid-template-columns: 1fr; gap: 0.85rem; }
+  .report-card { padding: 1.25rem !important; }
+  .download-section { padding: 1.25rem; text-align: left; align-items: flex-start; }
+  .download-content h3 { font-size: 1.1rem; }
+  .metric-value { font-size: 1.1rem; }
+}
+
+@media (max-width: 480px) {
+  .page-title { font-size: 1.5rem; line-height: 1.3; }
+  .page-header { padding: 1.75rem 0; margin-bottom: 1rem; }
+  .page-subtitle { font-size: 0.85rem; line-height: 1.5; }
+  .report-header h3 { font-size: 1.15rem; }
+  .report-card { padding: 1rem !important; border-radius: 8px; }
+  .corporate-table th, .corporate-table td { padding: 0.5rem 0.65rem; font-size: 0.8rem; }
+  .metrics-grid { gap: 0.65rem; }
+  .metric-item { padding: 0.65rem 0.85rem; border-radius: 4px; }
+  .metric-label { font-size: 0.72rem; }
+  .metric-value { font-size: 0.98rem; }
+  .download-section { padding: 1rem; gap: 0.85rem; border-radius: 8px; }
+  .download-content h3 { font-size: 1rem; }
+  .download-content p { font-size: 0.82rem; line-height: 1.5; }
+  .download-section .btn { width: 100%; }
 }
 </style>

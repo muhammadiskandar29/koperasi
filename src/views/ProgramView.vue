@@ -332,13 +332,41 @@ onMounted(async () => {
 }
 
 @media (max-width: 768px) {
-  .page-title { font-size: 2.25rem; }
-  .page-header { padding: 3rem 0; margin-bottom: 2rem; }
-  .program-showcase { padding: 1.5rem; gap: 2rem; }
-  .rounded-img { min-height: 200px; }
-  .other-programs-grid { gap: 1.5rem; }
-  .icon-wrapper svg { width: 28px; height: 28px; }
-  .title { font-size: 1.15rem; }
+  .page-title { font-size: 1.85rem; }
+  .page-header { padding: 2.25rem 0; margin-bottom: 1.5rem; }
+  .program-showcase { padding: 1.35rem; gap: 1.5rem; }
+  .rounded-img { min-height: 180px; }
+  .other-programs-grid { gap: 1.25rem; }
+  .icon-wrapper svg { width: 26px; height: 26px; }
+  .title { font-size: 1.1rem; }
+}
+
+@media (max-width: 480px) {
+  .page-title { font-size: 1.5rem; line-height: 1.3; }
+  .page-header { padding: 1.75rem 0; margin-bottom: 1rem; }
+  .page-subtitle { font-size: 0.85rem; line-height: 1.5; }
+  .program-showcase { padding: 1rem; gap: 1.25rem; border-radius: 8px; }
+  .program-showcase h2 { font-size: 1.2rem; margin-bottom: 0.75rem; }
+  .steps-grid { gap: 0.85rem; }
+  .step-item { padding: 0.65rem 0.85rem; border-radius: 4px; }
+  .step-header { gap: 0.5rem; margin-bottom: 0.35rem; }
+  .step-num { font-size: 0.95rem; }
+  .step-item h4 { font-size: 0.92rem; }
+  .step-item p { font-size: 0.8rem; line-height: 1.45; }
+  .rounded-img { max-height: 180px; min-height: auto; }
+  .other-programs-grid { gap: 1rem; }
+  .title { font-size: 1rem; line-height: 1.3; }
+  .desc { font-size: 0.82rem; line-height: 1.5; margin-bottom: 0.75rem !important; }
+  .feature-list li { font-size: 0.8rem; padding-left: 1.25rem; margin-bottom: 0.35rem; }
+  .program-modal-overlay { padding: 0.4rem; }
+  .program-modal-card { border-radius: 10px; max-height: 94vh; }
+  .modal-content-area { padding: 1rem; }
+  .modal-headline { font-size: 1.15rem; line-height: 1.3; }
+  .modal-description-box { font-size: 0.82rem; padding: 0.65rem 0.85rem; line-height: 1.5; margin-bottom: 1rem; }
+  .modal-benefits-section { margin-bottom: 1.25rem; }
+  .benefit-check-row { font-size: 0.8rem; gap: 0.45rem; }
+  .modal-footer-line { flex-direction: column; gap: 0.5rem; }
+  .modal-footer-line .btn { width: 100%; }
 }
 
 .card-footer-action {

@@ -335,11 +335,30 @@ onMounted(async () => {
 }
 
 @media (max-width: 768px) {
-  .page-title { font-size: 2.25rem; }
-  .page-header { padding: 3rem 0; margin-bottom: 2rem; }
-  .img-large { min-height: 250px; }
-  .about-detailed-grid { gap: 2rem; }
-  .legal-grid { gap: 1.5rem; }
-  .org-item { padding: 0.875rem 1rem; }
+  .page-title { font-size: 1.85rem; }
+  .page-header { padding: 2.25rem 0; margin-bottom: 1.5rem; }
+  .page-subtitle { font-size: 0.92rem; }
+  .img-large { min-height: 220px; }
+  .about-detailed-grid { gap: 1.75rem; }
+  .legal-grid { gap: 1.25rem; }
+  .org-item { padding: 0.85rem 1rem; }
+}
+
+@media (max-width: 480px) {
+  .page-title { font-size: 1.5rem; line-height: 1.3; }
+  .page-header { padding: 1.75rem 0; margin-bottom: 1rem; }
+  .page-subtitle { font-size: 0.85rem; line-height: 1.5; }
+  .badge-sub { font-size: 0.72rem; margin-bottom: 0.5rem; }
+  .img-large { min-height: 180px; max-height: 220px; }
+  .about-detailed-grid { gap: 1.25rem; }
+  .about-story h3 { font-size: 1.15rem; }
+  .about-story p { font-size: 0.85rem; line-height: 1.6; }
+  .mission-list li { font-size: 0.85rem; padding-left: 1.25rem; }
+  .legal-grid { gap: 1rem; }
+  .legal-list li { padding: 0.55rem 0; font-size: 0.82rem; }
+  .org-structure { gap: 0.65rem; }
+  .org-item { padding: 0.65rem 0.85rem; border-radius: 4px; }
+  .org-role { font-size: 0.68rem; margin-bottom: 0.15rem; }
+  .org-name { font-size: 0.9rem; }
 }
 </style>
