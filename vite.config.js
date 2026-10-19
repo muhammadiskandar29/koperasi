@@ -28,6 +28,8 @@ function localApiPlugin() {
             handlerModule = await import('./api/content.js')
           } else if (routeName === 'activities') {
             handlerModule = await import('./api/activities.js')
+          } else if (routeName === 'bootstrap') {
+            handlerModule = await import('./api/bootstrap.js')
           } else {
             return next()
           }

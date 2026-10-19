@@ -158,38 +158,74 @@ const handleLogout = () => {
   router.push('/admin/login')
 }
 
-// Fetch all initial data
-const fetchAllData = async () => {
-  isLoading.value = true
-  const ts = Date.now()
+const saveAdminCache = () => {
   try {
-    const [statsRes, newsRes, activitiesRes, programsRes, messagesRes, contentRes] = await Promise.all([
-      fetch(`/api/stats?t=${ts}`).then(r => r.json()),
-      fetch(`/api/news?t=${ts}`).then(r => r.json()),
-      fetch(`/api/activities?t=${ts}`).then(r => r.json()),
-      fetch(`/api/programs?t=${ts}`).then(r => r.json()),
-      fetch(`/api/messages?t=${ts}`).then(r => r.json()),
-      fetch(`/api/content?t=${ts}`).then(r => r.json())
-    ])
+    localStorage.setItem('kmlc_admin_cache', JSON.stringify({
+      stats: stats.value,
+      news: news.value,
+      activities: activities.value,
+      programs: programs.value,
+      messages: messages.value,
+      content: content.value
+    }))
+  } catch (e) {}
+}
 
-    if (statsRes.success) stats.value = statsRes.data || []
-    if (newsRes.success) news.value = newsRes.data || []
-    if (activitiesRes.success) activities.value = activitiesRes.data || []
-    if (programsRes.success) programs.value = programsRes.data || []
-    if (messagesRes.success) messages.value = messagesRes.data || []
-    if (contentRes.success && contentRes.data) {
-      content.value = {
-        ...content.value,
-        ...contentRes.data,
-        about: {
-          ...content.value.about,
-          ...(contentRes.data.about || {})
+const loadAdminCache = () => {
+  try {
+    const cached = localStorage.getItem('kmlc_admin_cache')
+    if (cached) {
+      const d = JSON.parse(cached)
+      if (d.stats && d.stats.length) stats.value = d.stats
+      if (d.news && d.news.length) news.value = d.news
+      if (d.activities && d.activities.length) activities.value = d.activities
+      if (d.programs && d.programs.length) programs.value = d.programs
+      if (d.messages) messages.value = d.messages
+      if (d.content) {
+        content.value = {
+          ...content.value,
+          ...d.content,
+          about: { ...content.value.about, ...(d.content.about || {}) }
         }
       }
+      return true
+    }
+  } catch (e) {}
+  return false
+}
+
+// Fetch all initial data via unified fast endpoint
+const fetchAllData = async () => {
+  // 1. Instant 0ms load from cache
+  const hasCache = loadAdminCache()
+  if (!hasCache) {
+    isLoading.value = true
+  }
+
+  // 2. Fast background sync via single /api/bootstrap endpoint
+  try {
+    const res = await fetch('/api/bootstrap').then(r => r.json())
+    if (res.success && res.data) {
+      const d = res.data
+      if (d.stats && d.stats.length) stats.value = d.stats
+      if (d.news && d.news.length) news.value = d.news
+      if (d.activities && d.activities.length) activities.value = d.activities
+      if (d.programs && d.programs.length) programs.value = d.programs
+      if (d.messages) messages.value = d.messages
+      if (d.content) {
+        content.value = {
+          ...content.value,
+          ...d.content,
+          about: {
+            ...content.value.about,
+            ...(d.content.about || {})
+          }
+        }
+      }
+      saveAdminCache()
     }
   } catch (err) {
-    console.error('Gagal memuat data CMS:', err)
-    notify('Gagal memuat data dari server', 'error')
+    console.warn('Gagal sinkronisasi data live:', err)
   } finally {
     isLoading.value = false
   }
@@ -210,6 +246,7 @@ const saveSection = async (sectionName, friendlyLabel = '') => {
     })
     const result = await res.json()
     if (!res.ok || !result.success) throw new Error(result.message)
+    saveAdminCache()
     notify(`Perubahan data [${friendlyLabel || sectionName}] berhasil disimpan.`)
   } catch (err) {
     notify('Gagal menyimpan: ' + err.message, 'error')
@@ -230,6 +267,7 @@ const saveAllStats = async () => {
         body: JSON.stringify(item)
       })
     }
+    saveAdminCache()
     notify('Statistik capaian berhasil disimpan.')
   } catch (err) {
     notify('Gagal menyimpan statistik: ' + err.message, 'error')
@@ -284,6 +322,7 @@ const saveNews = async () => {
       news.value.unshift(result.data || { ...newsForm.value, id: Date.now(), created_at: new Date().toISOString() })
     }
 
+    saveAdminCache()
     showNewsModal.value = false
     notify(isEditingNews.value ? 'Berita berhasil diperbarui.' : 'Berita baru berhasil diterbitkan.')
   } catch (err) {
@@ -303,6 +342,7 @@ const deleteNews = async (id) => {
     if (!res.ok || !result.success) throw new Error(result.message)
 
     news.value = news.value.filter(n => n.id !== id)
+    saveAdminCache()
     notify('Berita telah berhasil dihapus.')
   } catch (err) {
     notify('Gagal menghapus berita: ' + err.message, 'error')
@@ -369,6 +409,7 @@ const saveActivity = async () => {
     try {
       localStorage.setItem('kmlc_activities_cache', JSON.stringify(activities.value))
     } catch (e) {}
+    saveAdminCache()
 
     showActivityModal.value = false
     notify(isEditingActivity.value ? 'Dokumentasi kegiatan berhasil diperbarui.' : 'Dokumentasi baru berhasil disimpan.')
@@ -392,6 +433,7 @@ const deleteActivity = async (id) => {
     try {
       localStorage.setItem('kmlc_activities_cache', JSON.stringify(activities.value))
     } catch (e) {}
+    saveAdminCache()
 
     notify('Dokumentasi telah berhasil dihapus.')
   } catch (err) {
@@ -477,6 +519,7 @@ const saveProgram = async () => {
       programs.value.push(result.data || { ...payload, id: Date.now() })
     }
 
+    saveAdminCache()
     showProgramModal.value = false
     notify(isEditingProgram.value ? 'Program berhasil diperbarui.' : 'Program baru berhasil ditambahkan.')
   } catch (err) {
@@ -496,6 +539,7 @@ const deleteProgram = async (id) => {
     if (!res.ok || !result.success) throw new Error(result.message)
 
     programs.value = programs.value.filter(p => p.id !== id)
+    saveAdminCache()
     notify('Program telah berhasil dihapus.')
   } catch (err) {
     notify('Gagal menghapus program: ' + err.message, 'error')

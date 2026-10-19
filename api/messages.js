@@ -11,6 +11,7 @@ export default async function handler(req, res) {
 
   // GET: Daftar Pesan Masuk (untuk CMS Admin)
   if (req.method === 'GET') {
+    res.setHeader('Cache-Control', 'public, s-maxage=30, stale-while-revalidate=60')
     if (supabase) {
       const { data, error } = await supabase
         .from('koperasi_messages')
