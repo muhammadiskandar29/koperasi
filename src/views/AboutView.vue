@@ -13,8 +13,8 @@ const aboutData = ref({
   ],
   founderName: 'Unang Herman',
   founderTitle: 'Ketua / Inisiator KMLC',
-  secretaryName: 'Ahmad S.',
-  treasurerName: 'Siti N.',
+  secretaryName: 'Nursyah Pratiwi',
+  treasurerName: 'Agus Suryana',
   supervisorName: 'Perwakilan Kepolisian & Dinas Pertanian',
   aboutImage: '/assets/images/hero.jpg'
 })
@@ -28,14 +28,14 @@ const profileData = ref({
 
 onMounted(async () => {
   try {
-    const res = await fetch('/api/content?section=about&t=' + Date.now()).then(r => r.json())
+    const res = await fetch('/api/content?section=about').then(r => r.json())
     if (res.success && res.data) {
       aboutData.value = { ...aboutData.value, ...res.data }
     }
   } catch (e) {}
 
   try {
-    const pRes = await fetch('/api/content?section=profile&t=' + Date.now()).then(r => r.json())
+    const pRes = await fetch('/api/content?section=profile').then(r => r.json())
     if (pRes.success && pRes.data) {
       profileData.value = { ...profileData.value, ...pRes.data }
     }
@@ -129,11 +129,11 @@ onMounted(async () => {
               </div>
               <div class="org-item">
                 <span class="org-role">Sekretaris</span>
-                <span class="org-name">{{ aboutData.secretaryName || 'Ahmad S.' }}</span>
+                <span class="org-name">{{ aboutData.secretaryName || 'Nursyah Pratiwi' }}</span>
               </div>
               <div class="org-item">
                 <span class="org-role">Bendahara</span>
-                <span class="org-name">{{ aboutData.treasurerName || 'Siti N.' }}</span>
+                <span class="org-name">{{ aboutData.treasurerName || 'Agus Suryana' }}</span>
               </div>
               <div class="org-item">
                 <span class="org-role">Dewan Pengawas</span>

@@ -31,8 +31,8 @@ const content = ref({
     shortName: 'KMLC',
     tagline: 'Institusi Koperasi Konsumen bersertifikasi, berdedikasi membangun resiliensi finansial agrikultur melalui manajemen profesional.',
     address: 'Desa Cikawung, Kec. Terisi, Kab. Indramayu, Jawa Barat 45262',
-    phone: '(0234) 567890',
-    mobile: '0812-3456-7890',
+    phone: '0852-8033-0182',
+    mobile: '0852-8033-0182',
     email: 'korespondensi@kmlc.co.id',
     operatingHours: 'Senin - Jumat: 08:00 - 16:00 WIB',
     legalNumber: 'AHU-0012345.AH.01.26.TAHUN 2021',
@@ -49,8 +49,8 @@ const content = ref({
     ],
     founderName: 'Unang Herman',
     founderTitle: 'Ketua / Inisiator KMLC',
-    secretaryName: 'Ahmad Subagja, S.P.',
-    treasurerName: 'Hj. Siti Nurhaliza',
+    secretaryName: 'Nursyah Pratiwi',
+    treasurerName: 'Agus Suryana',
     supervisorName: 'Perwakilan Kepolisian & Dinas Pertanian',
     aboutImage: '/assets/images/hero.jpg'
   },
@@ -1472,10 +1472,18 @@ onMounted(() => {
             <input v-model="activityForm.title" type="text" class="form-input font-bold" placeholder="Contoh: Land Clearing & Perataan Lahan Cikawung" required />
           </div>
 
-          <div class="form-group">
-            <label>URL File Media (Foto / Video)</label>
-            <input v-model="activityForm.media_url" type="text" class="form-input" placeholder="/assets/images/... atau URL eksternal" required />
-            <span class="field-hint">Dapat menggunakan video/foto yang ada di public/assets/images/ (contoh: /assets/images/WhatsApp Video 2026-10-12 at 08.29.50.mp4)</span>
+          <div class="form-group" v-if="activityForm.type !== 'video'">
+            <ImageUploader 
+              v-model="activityForm.media_url" 
+              label="Foto Dokumentasi (WebP / Path Ringan)"
+              hint="Upload foto dari perangkat (otomatis dikonversi ke WebP ringan) atau pilih path foto yang tersedia."
+            />
+          </div>
+
+          <div class="form-group" v-else>
+            <label>Path File Video Lapangan</label>
+            <input v-model="activityForm.media_url" type="text" class="form-input" placeholder="/assets/images/WhatsApp Video ....mp4" required />
+            <span class="field-hint">Path file video di folder public/assets/images/</span>
           </div>
 
           <div class="form-row">

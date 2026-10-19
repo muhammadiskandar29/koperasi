@@ -147,7 +147,7 @@ onMounted(async () => {
 
           <div class="modal-footer-line">
             <a 
-              :href="'https://wa.me/6281234567890?text=' + encodeURIComponent('Halo Pengurus KMLC, saya ingin menanyakan informasi mengenai program ' + selectedProgram.title)" 
+              :href="'https://wa.me/6285280330182?text=' + encodeURIComponent('Halo Pengurus KMLC, saya ingin menanyakan informasi mengenai program ' + selectedProgram.title)" 
               target="_blank" 
               class="btn btn-primary"
             >

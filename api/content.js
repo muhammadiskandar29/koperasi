@@ -16,6 +16,7 @@ export default async function handler(req, res) {
 
   // GET: Ambil konten dinamis
   if (req.method === 'GET') {
+    res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300')
     if (supabase) {
       const query = supabase.from('koperasi_content').select('*')
       if (section) query.eq('id', section)

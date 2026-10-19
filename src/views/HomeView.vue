@@ -29,7 +29,7 @@ const dynamicNews = ref([
 
 onMounted(async () => {
   try {
-    const statsRes = await fetch('/api/stats?t=' + Date.now()).then(r => r.json())
+    const statsRes = await fetch('/api/stats').then(r => r.json())
     if (statsRes.success && statsRes.data && statsRes.data.length > 0) {
       dynamicStats.value = statsRes.data.map(item => ({
         id: item.id,
@@ -42,7 +42,7 @@ onMounted(async () => {
   }
 
   try {
-    const newsRes = await fetch('/api/news?t=' + Date.now()).then(r => r.json())
+    const newsRes = await fetch('/api/news').then(r => r.json())
     if (newsRes.success && newsRes.data && newsRes.data.length > 0) {
       dynamicNews.value = newsRes.data.filter(n => n.is_published !== false)
     }
@@ -51,7 +51,7 @@ onMounted(async () => {
   }
 
   try {
-    const faqRes = await fetch('/api/content?section=faqs&t=' + Date.now()).then(r => r.json())
+    const faqRes = await fetch('/api/content?section=faqs').then(r => r.json())
     if (faqRes.success && faqRes.data && faqRes.data.length > 0) {
       dynamicFaqs.value = faqRes.data
     }

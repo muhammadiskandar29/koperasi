@@ -27,14 +27,20 @@ const isDragging = ref(false)
 const isProcessing = ref(false)
 const showUrlInput = ref(false)
 
-// Galeri gambar bawaan koperasi
+// Galeri gambar bawaan koperasi (Hanya menyimpan path ke file lokal)
 const presets = [
   { label: 'Sawah Cikawung', url: '/assets/images/hero.jpg' },
-  { label: 'Panen Raya', url: '/assets/images/harvest.jpg' },
-  { label: 'Dokumentasi 1', url: '/assets/images/WhatsApp Image 2026-10-12 at 08.29.44.jpeg' },
-  { label: 'Dokumentasi 2', url: '/assets/images/WhatsApp Image 2026-10-12 at 08.29.51.jpeg' },
-  { label: 'Bibit Tanaman', url: '/assets/images/WhatsApp Image 2026-10-12 at 08.29.52.jpeg' }
+  { label: 'Panen Raya Jagung', url: '/assets/images/harvest.jpg' },
+  { label: 'Perataan Lahan', url: '/assets/images/WhatsApp Image 2026-10-12 at 08.29.44.jpeg' },
+  { label: 'Musyawarah KTH', url: '/assets/images/WhatsApp Image 2026-10-12 at 08.29.51.jpeg' },
+  { label: 'Survei Irigasi', url: '/assets/images/WhatsApp Image 2026-10-12 at 08.29.52.jpeg' },
+  { label: 'Titik Geotagging', url: '/assets/images/WhatsApp Image 2026-10-12 at 08.29.52 (1).jpeg' },
+  { label: 'Kebersamaan Tani', url: '/assets/images/WhatsApp Image 2026-10-12 at 08.29.52 (2).jpeg' },
+  { label: 'Video Land Clearing', url: '/assets/images/WhatsApp Video 2026-10-12 at 08.29.50.mp4' },
+  { label: 'Video Terasering', url: '/assets/images/WhatsApp Video 2026-10-12 at 08.29.51.mp4' }
 ]
+
+const compressionInfo = ref('')
 
 const triggerFilePicker = () => {
   if (fileInput.value) {
@@ -42,14 +48,12 @@ const triggerFilePicker = () => {
   }
 }
 
-// Kompresi otomatis di browser (Canvas)
+// Konversi & kompresi otomatis ke WebP super ringan di browser
 const compressAndEmit = (file) => {
-  if (!file || !file.type.startsWith('image/')) {
-    alert('File harus berupa gambar (JPG, PNG, atau WEBP).')
-    return
-  }
+  if (!file) return
 
   isProcessing.value = true
+  compressionInfo.value = ''
   const reader = new FileReader()
 
   reader.onload = (e) => {
@@ -59,7 +63,7 @@ const compressAndEmit = (file) => {
         const canvas = document.createElement('canvas')
         let width = img.width
         let height = img.height
-        const maxDimension = 1200
+        const maxDimension = 1000 // Dimensi optimal web responsif
 
         if (width > maxDimension || height > maxDimension) {
           if (width > height) {
@@ -76,7 +80,18 @@ const compressAndEmit = (file) => {
         const ctx = canvas.getContext('2d')
         ctx.drawImage(img, 0, 0, width, height)
 
-        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.85)
+        // Prioritaskan WebP yang jauh lebih ringan daripada PNG/JPG biasa
+        let compressedBase64 = canvas.toDataURL('image/webp', 0.75)
+        let formatName = 'WebP'
+
+        // Fallback jika browser lawas tidak support WebP
+        if (!compressedBase64.startsWith('data:image/webp')) {
+          compressedBase64 = canvas.toDataURL('image/jpeg', 0.75)
+          formatName = 'JPEG'
+        }
+
+        const sizeKb = Math.round((compressedBase64.length * 0.75) / 1024)
+        compressionInfo.value = `Terkonversi ke ${formatName} super ringan: ~${sizeKb} KB`
         emit('update:modelValue', compressedBase64)
       } catch (err) {
         emit('update:modelValue', e.target.result)
@@ -115,10 +130,12 @@ const handleDrop = (event) => {
 }
 
 const selectPreset = (url) => {
+  compressionInfo.value = 'Menggunakan path file lokal: ' + url
   emit('update:modelValue', url)
 }
 
 const removeImage = () => {
+  compressionInfo.value = ''
   emit('update:modelValue', '')
   if (fileInput.value) fileInput.value.value = ''
 }
@@ -131,6 +148,10 @@ const removeImage = () => {
       <span class="uploader-status" v-if="modelValue">Gambar Terpasang</span>
     </div>
     <p v-if="hint" class="uploader-hint">{{ hint }}</p>
+    <div v-if="compressionInfo" class="compression-alert">
+      <span class="compression-icon">⚡</span>
+      <span>{{ compressionInfo }}</span>
+    </div>
 
     <!-- Hidden native file input -->
     <input 
@@ -532,5 +553,23 @@ const removeImage = () => {
   border: 1px solid #CBD5E1;
   border-radius: 5px;
   box-sizing: border-box;
+}
+
+.compression-alert {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+  padding: 0.4rem 0.75rem;
+  background-color: #ECFDF5;
+  border: 1px solid #A7F3D0;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  color: #065F46;
+  font-weight: 500;
+}
+
+.compression-icon {
+  font-size: 0.9rem;
 }
 </style>

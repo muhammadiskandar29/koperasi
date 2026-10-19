@@ -12,24 +12,10 @@ export default async function handler(req, res) {
     return res.status(200).end()
   }
 
-  // GET: Ambil daftar seluruh aktivitas / dokumentasi kegiatan
   if (req.method === 'GET') {
+    res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300')
+
     if (supabase) {
-      // 1. Cek apakah ada tabel koperasi_activities langsung
-      try {
-        const { data, error } = await supabase
-          .from('koperasi_activities')
-          .select('*')
-          .order('id', { ascending: false })
-
-        if (!error && data) {
-          return res.status(200).json({ success: true, data, source: 'supabase-table' })
-        }
-      } catch (e) {
-        // Fallthrough ke koperasi_content
-      }
-
-      // 2. Cek di tabel koperasi_content dengan id = 'activities'
       try {
         const { data, error } = await supabase
           .from('koperasi_content')
@@ -41,7 +27,7 @@ export default async function handler(req, res) {
           return res.status(200).json({ success: true, data: data.payload, source: 'supabase-content' })
         }
       } catch (e) {
-        // Fallthrough
+        // Fallthrough ke local store
       }
     }
 
@@ -75,19 +61,6 @@ export default async function handler(req, res) {
     }
 
     if (supabase) {
-      // Coba insert ke koperasi_activities jika ada
-      try {
-        const { data, error } = await supabase
-          .from('koperasi_activities')
-          .insert([newActivity])
-          .select()
-
-        if (!error && data && data.length > 0) {
-          return res.status(201).json({ success: true, message: 'Dokumentasi berhasil disimpan ke Supabase', data: data[0] })
-        }
-      } catch (e) {}
-
-      // Fallback update ke koperasi_content
       try {
         const { data: cur } = await supabase.from('koperasi_content').select('payload').eq('id', 'activities').maybeSingle()
         const curList = cur && Array.isArray(cur.payload) ? cur.payload : (inMemoryStore.content?.activities || [])
@@ -124,18 +97,6 @@ export default async function handler(req, res) {
 
     if (supabase) {
       try {
-        const { data, error } = await supabase
-          .from('koperasi_activities')
-          .update(item)
-          .eq('id', item.id)
-          .select()
-
-        if (!error && data && data.length > 0) {
-          return res.status(200).json({ success: true, message: 'Dokumentasi berhasil diperbarui di Supabase', data: data[0] })
-        }
-      } catch (e) {}
-
-      try {
         const { data: cur } = await supabase.from('koperasi_content').select('payload').eq('id', 'activities').maybeSingle()
         let curList = cur && Array.isArray(cur.payload) ? cur.payload : (inMemoryStore.content?.activities || [])
         curList = curList.map(a => String(a.id) === String(item.id) ? { ...a, ...item } : a)
@@ -170,17 +131,6 @@ export default async function handler(req, res) {
     }
 
     if (supabase) {
-      try {
-        const { error } = await supabase
-          .from('koperasi_activities')
-          .delete()
-          .eq('id', id)
-
-        if (!error) {
-          return res.status(200).json({ success: true, message: 'Dokumentasi berhasil dihapus dari Supabase' })
-        }
-      } catch (e) {}
-
       try {
         const { data: cur } = await supabase.from('koperasi_content').select('payload').eq('id', 'activities').maybeSingle()
         let curList = cur && Array.isArray(cur.payload) ? cur.payload : (inMemoryStore.content?.activities || [])

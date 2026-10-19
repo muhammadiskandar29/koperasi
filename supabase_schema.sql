@@ -147,8 +147,8 @@ VALUES
             "shortName": "KMLC",
             "tagline": "Institusi Koperasi Konsumen bersertifikasi, berdedikasi membangun resiliensi finansial agrikultur melalui manajemen profesional.",
             "address": "Desa Cikawung, Kec. Terisi, Kab. Indramayu, Jawa Barat 45262",
-            "phone": "(0234) 567890",
-            "mobile": "0812-3456-7890",
+            "phone": "0852-8033-0182",
+            "mobile": "0852-8033-0182",
             "email": "korespondensi@kmlc.co.id",
             "operatingHours": "Senin - Jumat: 08:00 - 16:00 WIB",
             "legalNumber": "AHU-0012345.AH.01.26.TAHUN 2021",
@@ -168,8 +168,8 @@ VALUES
             ],
             "founderName": "Unang Herman",
             "founderTitle": "Ketua / Inisiator KMLC",
-            "secretaryName": "Ahmad Subagja, S.P.",
-            "treasurerName": "Hj. Siti Nurhaliza",
+            "secretaryName": "Nursyah Pratiwi",
+            "treasurerName": "Agus Suryana",
             "supervisorName": "Perwakilan Kepolisian & Dinas Pertanian",
             "aboutImage": "/assets/images/hero.jpg"
         }'::jsonb
