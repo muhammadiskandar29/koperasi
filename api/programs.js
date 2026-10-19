@@ -14,6 +14,7 @@ export default async function handler(req, res) {
 
   // GET: Daftar Program Koperasi
   if (req.method === 'GET') {
+    res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300')
     if (supabase) {
       const { data, error } = await supabase
         .from('koperasi_programs')

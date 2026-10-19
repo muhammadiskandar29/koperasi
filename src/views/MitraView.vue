@@ -9,13 +9,21 @@ const partnersList = ref([
   { id: 4, name: 'Bank BJB Syariah', category: 'Perbankan', description: 'Fasilitator permodalan KUR Klaster Pertanian dengan margin rendah khusus anggota KMLC.' }
 ])
 
-onMounted(async () => {
+onMounted(() => {
   try {
-    const res = await fetch('/api/content?section=partners').then(r => r.json())
-    if (res.success && res.data && res.data.length > 0) {
-      partnersList.value = res.data
-    }
+    const cached = localStorage.getItem('kmlc_partners_cache')
+    if (cached) partnersList.value = JSON.parse(cached)
   } catch (e) {}
+
+  fetch('/api/content?section=partners')
+    .then(r => r.json())
+    .then(res => {
+      if (res.success && res.data && res.data.length > 0) {
+        partnersList.value = res.data
+        try { localStorage.setItem('kmlc_partners_cache', JSON.stringify(partnersList.value)) } catch (e) {}
+      }
+    })
+    .catch(() => {})
 })
 </script>
 

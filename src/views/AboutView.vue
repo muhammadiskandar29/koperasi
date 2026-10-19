@@ -26,20 +26,30 @@ const profileData = ref({
   nib: '1234567890123'
 })
 
-onMounted(async () => {
+onMounted(() => {
+  // 1. Instant 0ms render from localStorage cache
   try {
-    const res = await fetch('/api/content?section=about').then(r => r.json())
-    if (res.success && res.data) {
-      aboutData.value = { ...aboutData.value, ...res.data }
-    }
+    const cachedAbout = localStorage.getItem('kmlc_about_cache')
+    if (cachedAbout) aboutData.value = { ...aboutData.value, ...JSON.parse(cachedAbout) }
+
+    const cachedProfile = localStorage.getItem('kmlc_profile_cache')
+    if (cachedProfile) profileData.value = { ...profileData.value, ...JSON.parse(cachedProfile) }
   } catch (e) {}
 
-  try {
-    const pRes = await fetch('/api/content?section=profile').then(r => r.json())
-    if (pRes.success && pRes.data) {
-      profileData.value = { ...profileData.value, ...pRes.data }
+  // 2. Fetch concurrently in background
+  Promise.allSettled([
+    fetch('/api/content?section=about').then(r => r.json()),
+    fetch('/api/content?section=profile').then(r => r.json())
+  ]).then(([res, pRes]) => {
+    if (res.status === 'fulfilled' && res.value?.success && res.value.data) {
+      aboutData.value = { ...aboutData.value, ...res.value.data }
+      try { localStorage.setItem('kmlc_about_cache', JSON.stringify(aboutData.value)) } catch (e) {}
     }
-  } catch (e) {}
+    if (pRes.status === 'fulfilled' && pRes.value?.success && pRes.value.data) {
+      profileData.value = { ...profileData.value, ...pRes.value.data }
+      try { localStorage.setItem('kmlc_profile_cache', JSON.stringify(profileData.value)) } catch (e) {}
+    }
+  }).catch(() => {})
 })
 </script>
 

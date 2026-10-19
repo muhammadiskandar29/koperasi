@@ -289,7 +289,7 @@ onUnmounted(() => {
           Galeri Kegiatan & Aktivitas Fisik
         </h1>
         <p class="page-subtitle animate-fade-up" style="animation-delay: 0.2s">
-          Rekaman visual dan data riil progres penataan lahan, operasional alat berat, dan musyawarah kemitraan yang tersinkronisasi langsung dengan database Supabase.
+          Rekaman visual dan data riil progres penataan lahan, operasional alat berat, dan musyawarah kemitraan yang tersinkronisasi secara real-time.
         </p>
       </div>
     </section>
@@ -333,8 +333,8 @@ onUnmounted(() => {
               <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             </div>
             <div class="metric-content">
-              <div class="metric-val">100% Database</div>
-              <div class="metric-lbl">Terkoneksi Cloud Supabase</div>
+              <div class="metric-val">100% Terverifikasi</div>
+              <div class="metric-lbl">Database Cloud Aktif</div>
             </div>
           </div>
         </div>
@@ -388,7 +388,7 @@ onUnmounted(() => {
         <div v-else-if="activities.length === 0" class="empty-state">
           <svg class="empty-icon" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
           <h3>Belum Ada Dokumentasi Kegiatan di Database</h3>
-          <p>Data dokumentasi foto dan video belum diinputkan ke database Supabase atau telah dihapus oleh pengurus.</p>
+          <p>Data dokumentasi foto dan video belum diinputkan ke sistem database atau sedang dalam proses pembaharuan oleh pengurus.</p>
           <router-link to="/admin" class="btn btn-outline mt-3">Buka Panel Admin CMS</router-link>
         </div>
 

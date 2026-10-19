@@ -8,13 +8,21 @@ const reportsList = ref([
   { id: 3, title: 'Laporan Distribusi SHU & Partisipasi Anggota', year: '2025', status: 'Selesai Dicairkan', downloadUrl: '#' }
 ])
 
-onMounted(async () => {
+onMounted(() => {
   try {
-    const res = await fetch('/api/content?section=reports').then(r => r.json())
-    if (res.success && res.data && res.data.length > 0) {
-      reportsList.value = res.data
-    }
+    const cached = localStorage.getItem('kmlc_reports_cache')
+    if (cached) reportsList.value = JSON.parse(cached)
   } catch (e) {}
+
+  fetch('/api/content?section=reports')
+    .then(r => r.json())
+    .then(res => {
+      if (res.success && res.data && res.data.length > 0) {
+        reportsList.value = res.data
+        try { localStorage.setItem('kmlc_reports_cache', JSON.stringify(reportsList.value)) } catch (e) {}
+      }
+    })
+    .catch(() => {})
 })
 </script>
 

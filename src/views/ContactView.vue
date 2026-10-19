@@ -19,13 +19,21 @@ const formData = ref({
 const isSubmitted = ref(false)
 const isSubmitting = ref(false)
 
-onMounted(async () => {
+onMounted(() => {
   try {
-    const res = await fetch('/api/content?section=profile').then(r => r.json())
-    if (res.success && res.data) {
-      profileData.value = { ...profileData.value, ...res.data }
-    }
+    const cached = localStorage.getItem('kmlc_profile_cache')
+    if (cached) profileData.value = { ...profileData.value, ...JSON.parse(cached) }
   } catch (e) {}
+
+  fetch('/api/content?section=profile')
+    .then(r => r.json())
+    .then(res => {
+      if (res.success && res.data) {
+        profileData.value = { ...profileData.value, ...res.data }
+        try { localStorage.setItem('kmlc_profile_cache', JSON.stringify(profileData.value)) } catch (e) {}
+      }
+    })
+    .catch(() => {})
 })
 
 const submitForm = async () => {

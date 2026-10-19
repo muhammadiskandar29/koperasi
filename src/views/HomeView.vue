@@ -27,44 +27,51 @@ const dynamicNews = ref([
   }
 ])
 
-onMounted(async () => {
-  try {
-    const statsRes = await fetch('/api/stats').then(r => r.json())
-    if (statsRes.success && statsRes.data && statsRes.data.length > 0) {
-      dynamicStats.value = statsRes.data.map(item => ({
-        id: item.id,
-        value: item.value,
-        label: item.label
-      }))
-    }
-  } catch (e) {
-    // fallback gracefully
-  }
-
-  try {
-    const newsRes = await fetch('/api/news').then(r => r.json())
-    if (newsRes.success && newsRes.data && newsRes.data.length > 0) {
-      dynamicNews.value = newsRes.data.filter(n => n.is_published !== false)
-    }
-  } catch (e) {
-    // fallback gracefully
-  }
-
-  try {
-    const faqRes = await fetch('/api/content?section=faqs').then(r => r.json())
-    if (faqRes.success && faqRes.data && faqRes.data.length > 0) {
-      dynamicFaqs.value = faqRes.data
-    }
-  } catch (e) {
-    // fallback gracefully
-  }
-})
-
 const dynamicFaqs = ref([
   { id: 1, question: 'Prosedur Pendaftaran Mitra KTH KMLC', answer: 'Registrasi dapat dilakukan secara luring di kantor sekretariat Desa Cikawung atau melalui form pada halaman Kontak. Calon mitra diwajibkan memiliki kelengkapan administrasi domisili dan mematuhi standar operasional KMLC.' },
   { id: 2, question: 'Struktur Permodalan & Kewajiban Finansial', answer: 'Kewajiban finansial meliputi Simpanan Pokok dan Simpanan Wajib sesuai AD/ART yang ditetapkan dalam Rapat Anggota. Dana dikelola secara transparan dan dipublikasikan pada laporan neraca berkala.' },
   { id: 3, question: 'Mekanisme Distribusi Hasil Panen', answer: 'KMLC berkedudukan sebagai offtaker utama dengan penetapan harga beli (HPP) yang mengacu pada indeks harga pasar regional, memastikan proteksi nilai bagi para anggota petani.' }
 ])
+
+onMounted(() => {
+  // 1. Instant 0ms render from localStorage cache
+  try {
+    const cachedStats = localStorage.getItem('kmlc_stats_cache')
+    if (cachedStats) dynamicStats.value = JSON.parse(cachedStats)
+
+    const cachedNews = localStorage.getItem('kmlc_news_cache')
+    if (cachedNews) dynamicNews.value = JSON.parse(cachedNews)
+
+    const cachedFaqs = localStorage.getItem('kmlc_faqs_cache')
+    if (cachedFaqs) dynamicFaqs.value = JSON.parse(cachedFaqs)
+  } catch (e) {}
+
+  // 2. Fetch concurrently in background (0ms UI block)
+  Promise.allSettled([
+    fetch('/api/stats').then(r => r.json()),
+    fetch('/api/news').then(r => r.json()),
+    fetch('/api/content?section=faqs').then(r => r.json())
+  ]).then(([statsRes, newsRes, faqRes]) => {
+    if (statsRes.status === 'fulfilled' && statsRes.value?.success && statsRes.value.data?.length > 0) {
+      dynamicStats.value = statsRes.value.data.map(item => ({
+        id: item.id,
+        value: item.value,
+        label: item.label
+      }))
+      try { localStorage.setItem('kmlc_stats_cache', JSON.stringify(dynamicStats.value)) } catch (e) {}
+    }
+
+    if (newsRes.status === 'fulfilled' && newsRes.value?.success && newsRes.value.data?.length > 0) {
+      dynamicNews.value = newsRes.value.data.filter(n => n.is_published !== false)
+      try { localStorage.setItem('kmlc_news_cache', JSON.stringify(dynamicNews.value)) } catch (e) {}
+    }
+
+    if (faqRes.status === 'fulfilled' && faqRes.value?.success && faqRes.value.data?.length > 0) {
+      dynamicFaqs.value = faqRes.value.data
+      try { localStorage.setItem('kmlc_faqs_cache', JSON.stringify(dynamicFaqs.value)) } catch (e) {}
+    }
+  }).catch(() => {})
+})
 
 const selectedNews = ref(null)
 const showNewsModal = ref(false)

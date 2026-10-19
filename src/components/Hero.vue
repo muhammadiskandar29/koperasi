@@ -15,23 +15,29 @@ const heroStats = ref([
   { val: '120+', label: 'Mitra Petani' }
 ])
 
-onMounted(async () => {
+onMounted(() => {
+  // 1. Instant 0ms render from localStorage cache
   try {
-    const res = await fetch('/api/content?section=hero&t=' + Date.now()).then(r => r.json())
-    if (res.success && res.data) {
-      heroData.value = { ...heroData.value, ...res.data }
-    }
+    const cachedHero = localStorage.getItem('kmlc_hero_cache')
+    if (cachedHero) heroData.value = { ...heroData.value, ...JSON.parse(cachedHero) }
   } catch (e) {}
 
-  try {
-    const statsRes = await fetch('/api/stats?t=' + Date.now()).then(r => r.json())
-    if (statsRes.success && statsRes.data && statsRes.data.length >= 2) {
+  // 2. Fetch concurrently without cache-busting timestamp
+  Promise.allSettled([
+    fetch('/api/content?section=hero').then(r => r.json()),
+    fetch('/api/stats').then(r => r.json())
+  ]).then(([res, statsRes]) => {
+    if (res.status === 'fulfilled' && res.value?.success && res.value.data) {
+      heroData.value = { ...heroData.value, ...res.value.data }
+      try { localStorage.setItem('kmlc_hero_cache', JSON.stringify(heroData.value)) } catch (e) {}
+    }
+    if (statsRes.status === 'fulfilled' && statsRes.value?.success && statsRes.value.data?.length >= 2) {
       heroStats.value = [
-        { val: statsRes.data[0].value, label: statsRes.data[0].label },
-        { val: statsRes.data[1].value, label: statsRes.data[1].label }
+        { val: statsRes.value.data[0].value, label: statsRes.value.data[0].label },
+        { val: statsRes.value.data[1].value, label: statsRes.value.data[1].label }
       ]
     }
-  } catch (e) {}
+  }).catch(() => {})
 })
 </script>
 

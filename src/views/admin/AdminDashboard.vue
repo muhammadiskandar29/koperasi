@@ -9,6 +9,8 @@ const router = useRouter()
 const activeTab = ref('overview')
 const user = ref(null)
 const isLoading = ref(true)
+const isSaving = ref(false)
+const savingMessage = ref('')
 const statusMessage = ref({ text: '', type: 'success' })
 
 // Data State
@@ -195,6 +197,8 @@ const fetchAllData = async () => {
 
 // Save Section Content Helper
 const saveSection = async (sectionName, friendlyLabel = '') => {
+  isSaving.value = true
+  savingMessage.value = `Menyimpan perubahan ${friendlyLabel || sectionName}...`
   try {
     const res = await fetch('/api/content', {
       method: 'POST',
@@ -209,11 +213,15 @@ const saveSection = async (sectionName, friendlyLabel = '') => {
     notify(`Perubahan data [${friendlyLabel || sectionName}] berhasil disimpan.`)
   } catch (err) {
     notify('Gagal menyimpan: ' + err.message, 'error')
+  } finally {
+    isSaving.value = false
   }
 }
 
 // ======================== STATS HANDLERS ========================
 const saveAllStats = async () => {
+  isSaving.value = true
+  savingMessage.value = 'Menyimpan statistik capaian...'
   try {
     for (const item of stats.value) {
       await fetch('/api/stats', {
@@ -225,6 +233,8 @@ const saveAllStats = async () => {
     notify('Statistik capaian berhasil disimpan.')
   } catch (err) {
     notify('Gagal menyimpan statistik: ' + err.message, 'error')
+  } finally {
+    isSaving.value = false
   }
 }
 
@@ -255,6 +265,8 @@ const saveNews = async () => {
     return
   }
 
+  isSaving.value = true
+  savingMessage.value = isEditingNews.value ? 'Memperbarui berita kegiatan...' : 'Menerbitkan berita baru...'
   try {
     const method = isEditingNews.value ? 'PUT' : 'POST'
     const res = await fetch('/api/news', {
@@ -265,25 +277,37 @@ const saveNews = async () => {
     const result = await res.json()
     if (!res.ok || !result.success) throw new Error(result.message)
 
+    if (isEditingNews.value) {
+      const idx = news.value.findIndex(n => n.id === newsForm.value.id)
+      if (idx !== -1) news.value[idx] = { ...newsForm.value }
+    } else {
+      news.value.unshift(result.data || { ...newsForm.value, id: Date.now(), created_at: new Date().toISOString() })
+    }
+
     showNewsModal.value = false
     notify(isEditingNews.value ? 'Berita berhasil diperbarui.' : 'Berita baru berhasil diterbitkan.')
-    fetchAllData()
   } catch (err) {
     notify('Gagal menyimpan berita: ' + err.message, 'error')
+  } finally {
+    isSaving.value = false
   }
 }
 
 const deleteNews = async (id) => {
   if (!confirm('Hapus berita ini? Tindakan tidak dapat dibatalkan.')) return
+  isSaving.value = true
+  savingMessage.value = 'Menghapus berita...'
   try {
     const res = await fetch(`/api/news?id=${id}`, { method: 'DELETE' })
     const result = await res.json()
     if (!res.ok || !result.success) throw new Error(result.message)
 
+    news.value = news.value.filter(n => n.id !== id)
     notify('Berita telah berhasil dihapus.')
-    fetchAllData()
   } catch (err) {
     notify('Gagal menghapus berita: ' + err.message, 'error')
+  } finally {
+    isSaving.value = false
   }
 }
 
@@ -318,10 +342,12 @@ const openEditActivityModal = (item) => {
 
 const saveActivity = async () => {
   if (!activityForm.value.title || !activityForm.value.media_url) {
-    alert('Judul dan URL media (foto/video) wajib diisi.')
+    alert('Judul dan file media (foto/video) wajib diisi.')
     return
   }
 
+  isSaving.value = true
+  savingMessage.value = isEditingActivity.value ? 'Memperbarui dokumentasi kegiatan...' : 'Menyimpan dokumentasi baru...'
   try {
     const method = isEditingActivity.value ? 'PUT' : 'POST'
     const res = await fetch('/api/activities', {
@@ -332,25 +358,46 @@ const saveActivity = async () => {
     const result = await res.json()
     if (!res.ok || !result.success) throw new Error(result.message)
 
+    if (isEditingActivity.value) {
+      const idx = activities.value.findIndex(a => a.id === activityForm.value.id)
+      if (idx !== -1) activities.value[idx] = { ...activityForm.value }
+    } else {
+      const newItem = result.data || { ...activityForm.value, id: Date.now() }
+      activities.value.unshift(newItem)
+    }
+
+    try {
+      localStorage.setItem('kmlc_activities_cache', JSON.stringify(activities.value))
+    } catch (e) {}
+
     showActivityModal.value = false
-    notify(isEditingActivity.value ? 'Dokumentasi kegiatan berhasil diperbarui di database.' : 'Dokumentasi baru berhasil disimpan ke database Supabase.')
-    fetchAllData()
+    notify(isEditingActivity.value ? 'Dokumentasi kegiatan berhasil diperbarui.' : 'Dokumentasi baru berhasil disimpan.')
   } catch (err) {
     notify('Gagal menyimpan dokumentasi: ' + err.message, 'error')
+  } finally {
+    isSaving.value = false
   }
 }
 
 const deleteActivity = async (id) => {
-  if (!confirm('Hapus dokumentasi kegiatan ini dari database Supabase? Tindakan ini permanen.')) return
+  if (!confirm('Hapus dokumentasi kegiatan ini? Tindakan ini permanen.')) return
+  isSaving.value = true
+  savingMessage.value = 'Menghapus dokumentasi kegiatan...'
   try {
     const res = await fetch(`/api/activities?id=${id}`, { method: 'DELETE' })
     const result = await res.json()
     if (!res.ok || !result.success) throw new Error(result.message)
 
-    notify('Dokumentasi telah berhasil dihapus dari database.')
-    fetchAllData()
+    activities.value = activities.value.filter(a => String(a.id) !== String(id))
+    try {
+      localStorage.setItem('kmlc_activities_cache', JSON.stringify(activities.value))
+    } catch (e) {}
+
+    notify('Dokumentasi telah berhasil dihapus.')
   } catch (err) {
     notify('Gagal menghapus dokumentasi: ' + err.message, 'error')
+  } finally {
+    isSaving.value = false
   }
 }
 
@@ -404,6 +451,8 @@ const saveProgram = async () => {
     return
   }
 
+  isSaving.value = true
+  savingMessage.value = isEditingProgram.value ? 'Memperbarui program layanan...' : 'Menyimpan program baru...'
   try {
     const method = isEditingProgram.value ? 'PUT' : 'POST'
     const cleanBenefits = programForm.value.benefitsList.filter(b => b && b.trim() !== '')
@@ -421,25 +470,37 @@ const saveProgram = async () => {
     const result = await res.json()
     if (!res.ok || !result.success) throw new Error(result.message)
 
+    if (isEditingProgram.value) {
+      const idx = programs.value.findIndex(p => p.id === programForm.value.id)
+      if (idx !== -1) programs.value[idx] = { ...payload }
+    } else {
+      programs.value.push(result.data || { ...payload, id: Date.now() })
+    }
+
     showProgramModal.value = false
     notify(isEditingProgram.value ? 'Program berhasil diperbarui.' : 'Program baru berhasil ditambahkan.')
-    fetchAllData()
   } catch (err) {
     notify('Gagal menyimpan program: ' + err.message, 'error')
+  } finally {
+    isSaving.value = false
   }
 }
 
 const deleteProgram = async (id) => {
   if (!confirm('Hapus program ini?')) return
+  isSaving.value = true
+  savingMessage.value = 'Menghapus program...'
   try {
     const res = await fetch(`/api/programs?id=${id}`, { method: 'DELETE' })
     const result = await res.json()
     if (!res.ok || !result.success) throw new Error(result.message)
 
+    programs.value = programs.value.filter(p => p.id !== id)
     notify('Program telah berhasil dihapus.')
-    fetchAllData()
   } catch (err) {
     notify('Gagal menghapus program: ' + err.message, 'error')
+  } finally {
+    isSaving.value = false
   }
 }
 
@@ -826,7 +887,10 @@ onMounted(() => {
             </div>
             <div class="btn-group-right">
               <router-link to="/" target="_blank" class="btn btn-secondary">Pratinjau Beranda</router-link>
-              <button @click="saveSection('hero', 'Banner Beranda')" class="btn btn-primary">Simpan Banner</button>
+              <button @click="saveSection('hero', 'Banner Beranda')" class="btn btn-primary" :disabled="isSaving">
+                <span v-if="isSaving" class="spinner-sm"></span>
+                {{ isSaving ? 'Menyimpan...' : 'Simpan Banner' }}
+              </button>
             </div>
           </div>
 
@@ -864,7 +928,10 @@ onMounted(() => {
             </div>
 
             <div class="form-actions-bar">
-              <button @click="saveSection('hero', 'Banner Beranda')" class="btn btn-primary">Simpan Perubahan Banner</button>
+              <button @click="saveSection('hero', 'Banner Beranda')" class="btn btn-primary" :disabled="isSaving">
+                <span v-if="isSaving" class="spinner-sm"></span>
+                {{ isSaving ? 'Menyimpan...' : 'Simpan Perubahan Banner' }}
+              </button>
             </div>
           </div>
         </div>
@@ -931,7 +998,7 @@ onMounted(() => {
           <div class="pane-action-bar">
             <div>
               <h2>Dokumentasi & Galeri Kegiatan Lapangan</h2>
-              <p class="text-muted">Kelola foto dan video aktivitas pembukaan lahan, rapat koordinasi, serta monitoring lapangan (tersimpan langsung di Supabase).</p>
+              <p class="text-muted">Kelola foto dan video aktivitas pembukaan lahan, rapat koordinasi, serta monitoring lapangan (tersimpan aman di cloud database real-time).</p>
             </div>
             <div class="btn-group-right">
               <router-link to="/kegiatan" target="_blank" class="btn btn-secondary">Lihat Halaman Galeri</router-link>
@@ -1045,7 +1112,10 @@ onMounted(() => {
             </div>
             <div class="btn-group-right">
               <router-link to="/tentang" target="_blank" class="btn btn-secondary">Lihat Halaman Profil</router-link>
-              <button @click="saveSection('about', 'Profil & Struktur')" class="btn btn-primary">Simpan Profil</button>
+              <button @click="saveSection('about', 'Profil & Struktur')" class="btn btn-primary" :disabled="isSaving">
+                <span v-if="isSaving" class="spinner-sm"></span>
+                {{ isSaving ? 'Menyimpan...' : 'Simpan Profil' }}
+              </button>
             </div>
           </div>
 
@@ -1119,7 +1189,10 @@ onMounted(() => {
             </div>
 
             <div class="form-actions-bar">
-              <button @click="saveSection('about', 'Profil & Struktur')" class="btn btn-primary">Simpan Profil & Pengurus</button>
+              <button @click="saveSection('about', 'Profil & Struktur')" class="btn btn-primary" :disabled="isSaving">
+                <span v-if="isSaving" class="spinner-sm"></span>
+                {{ isSaving ? 'Menyimpan...' : 'Simpan Profil & Pengurus' }}
+              </button>
             </div>
           </div>
         </div>
@@ -1195,7 +1268,10 @@ onMounted(() => {
               <h2>Statistik Capaian Beranda</h2>
               <p class="text-muted">4 indikator utama pencapaian yang tampil di halaman depan website.</p>
             </div>
-            <button @click="saveAllStats" class="btn btn-primary">Simpan Semua Statistik</button>
+            <button @click="saveAllStats" class="btn btn-primary" :disabled="isSaving">
+              <span v-if="isSaving" class="spinner-sm"></span>
+              {{ isSaving ? 'Menyimpan...' : 'Simpan Semua Statistik' }}
+            </button>
           </div>
 
           <div class="stats-form-grid">
@@ -1220,7 +1296,10 @@ onMounted(() => {
           </div>
 
           <div class="form-actions-bar mt-4">
-            <button @click="saveAllStats" class="btn btn-primary">Simpan Semua Statistik</button>
+            <button @click="saveAllStats" class="btn btn-primary" :disabled="isSaving">
+              <span v-if="isSaving" class="spinner-sm"></span>
+              {{ isSaving ? 'Menyimpan...' : 'Simpan Semua Statistik' }}
+            </button>
           </div>
         </div>
 
@@ -1255,7 +1334,10 @@ onMounted(() => {
             </div>
             <div class="btn-group-right">
               <router-link to="/kontak" target="_blank" class="btn btn-secondary">Lihat Halaman Kontak</router-link>
-              <button @click="saveSection('profile', 'Kontak & Legalitas')" class="btn btn-primary">Simpan Kontak</button>
+              <button @click="saveSection('profile', 'Kontak & Legalitas')" class="btn btn-primary" :disabled="isSaving">
+                <span v-if="isSaving" class="spinner-sm"></span>
+                {{ isSaving ? 'Menyimpan...' : 'Simpan Kontak' }}
+              </button>
             </div>
           </div>
 
@@ -1312,7 +1394,10 @@ onMounted(() => {
             </div>
 
             <div class="form-actions-bar">
-              <button @click="saveSection('profile', 'Kontak & Legalitas')" class="btn btn-primary">Simpan Kontak & Legalitas</button>
+              <button @click="saveSection('profile', 'Kontak & Legalitas')" class="btn btn-primary" :disabled="isSaving">
+                <span v-if="isSaving" class="spinner-sm"></span>
+                {{ isSaving ? 'Menyimpan...' : 'Simpan Kontak & Legalitas' }}
+              </button>
             </div>
           </div>
         </div>
@@ -1372,7 +1457,7 @@ onMounted(() => {
           <div class="settings-container">
             <div class="settings-card">
               <h3>Status Integrasi Serverless & Database</h3>
-              <p class="text-muted">Sistem penyimpanan lokal dan cloud Supabase aktif.</p>
+              <p class="text-muted">Sistem sinkronisasi database cloud aktif.</p>
 
               <div class="status-indicator-box">
                 <div class="indicator-dot online"></div>
@@ -1389,11 +1474,11 @@ onMounted(() => {
     </div>
 
     <!-- NEWS MODAL (TAMBAH / EDIT BERITA) -->
-    <div v-if="showNewsModal" class="modal-backdrop" @click.self="showNewsModal = false">
+    <div v-if="showNewsModal" class="modal-backdrop" @click.self="!isSaving && (showNewsModal = false)">
       <div class="modal-window">
         <div class="modal-header">
           <h3>{{ isEditingNews ? 'Edit Berita Kegiatan' : 'Tambah Berita / Kegiatan Baru' }}</h3>
-          <button @click="showNewsModal = false" class="modal-close">&times;</button>
+          <button @click="!isSaving && (showNewsModal = false)" class="modal-close" :disabled="isSaving">&times;</button>
         </div>
         <form @submit.prevent="saveNews" class="modal-body">
           
@@ -1438,19 +1523,22 @@ onMounted(() => {
           </div>
 
           <div class="modal-footer">
-            <button type="button" @click="showNewsModal = false" class="btn btn-secondary">Batal</button>
-            <button type="submit" class="btn btn-primary">Simpan Berita</button>
+            <button type="button" @click="!isSaving && (showNewsModal = false)" class="btn btn-secondary" :disabled="isSaving">Batal</button>
+            <button type="submit" class="btn btn-primary" :disabled="isSaving">
+              <span v-if="isSaving" class="spinner-sm"></span>
+              {{ isSaving ? 'Menyimpan...' : (isEditingNews ? 'Simpan Perubahan' : 'Terbitkan Berita') }}
+            </button>
           </div>
         </form>
       </div>
     </div>
 
     <!-- ACTIVITY MODAL (TAMBAH / EDIT DOKUMENTASI KEGIATAN) -->
-    <div v-if="showActivityModal" class="modal-backdrop" @click.self="showActivityModal = false">
+    <div v-if="showActivityModal" class="modal-backdrop" @click.self="!isSaving && (showActivityModal = false)">
       <div class="modal-window">
         <div class="modal-header">
           <h3>{{ isEditingActivity ? 'Edit Dokumentasi Kegiatan' : 'Tambah Dokumentasi Kegiatan Baru' }}</h3>
-          <button @click="showActivityModal = false" class="modal-close">&times;</button>
+          <button @click="!isSaving && (showActivityModal = false)" class="modal-close" :disabled="isSaving">&times;</button>
         </div>
         <form @submit.prevent="saveActivity" class="modal-body">
           <div class="form-row">
@@ -1536,19 +1624,22 @@ onMounted(() => {
           </div>
 
           <div class="modal-footer">
-            <button type="button" @click="showActivityModal = false" class="btn btn-secondary">Batal</button>
-            <button type="submit" class="btn btn-primary">Simpan ke Supabase</button>
+            <button type="button" @click="!isSaving && (showActivityModal = false)" class="btn btn-secondary" :disabled="isSaving">Batal</button>
+            <button type="submit" class="btn btn-primary" :disabled="isSaving">
+              <span v-if="isSaving" class="spinner-sm"></span>
+              {{ isSaving ? 'Menyimpan...' : (isEditingActivity ? 'Simpan Perubahan' : 'Tambah Dokumentasi') }}
+            </button>
           </div>
         </form>
       </div>
     </div>
 
     <!-- PROGRAM MODAL (TAMBAH / EDIT PROGRAM) -->
-    <div v-if="showProgramModal" class="modal-backdrop" @click.self="showProgramModal = false">
+    <div v-if="showProgramModal" class="modal-backdrop" @click.self="!isSaving && (showProgramModal = false)">
       <div class="modal-window">
         <div class="modal-header">
           <h3>{{ isEditingProgram ? 'Edit Program Layanan' : 'Tambah Program Layanan' }}</h3>
-          <button @click="showProgramModal = false" class="modal-close">&times;</button>
+          <button @click="!isSaving && (showProgramModal = false)" class="modal-close" :disabled="isSaving">&times;</button>
         </div>
         <form @submit.prevent="saveProgram" class="modal-body">
           
@@ -1591,19 +1682,22 @@ onMounted(() => {
           </div>
 
           <div class="modal-footer">
-            <button type="button" @click="showProgramModal = false" class="btn btn-secondary">Batal</button>
-            <button type="submit" class="btn btn-primary">Simpan Program</button>
+            <button type="button" @click="!isSaving && (showProgramModal = false)" class="btn btn-secondary" :disabled="isSaving">Batal</button>
+            <button type="submit" class="btn btn-primary" :disabled="isSaving">
+              <span v-if="isSaving" class="spinner-sm"></span>
+              {{ isSaving ? 'Menyimpan...' : (isEditingProgram ? 'Simpan Perubahan' : 'Simpan Program') }}
+            </button>
           </div>
         </form>
       </div>
     </div>
 
     <!-- PARTNER MODAL -->
-    <div v-if="showPartnerModal" class="modal-backdrop" @click.self="showPartnerModal = false">
+    <div v-if="showPartnerModal" class="modal-backdrop" @click.self="!isSaving && (showPartnerModal = false)">
       <div class="modal-window">
         <div class="modal-header">
           <h3>{{ isEditingPartner ? 'Edit Mitra' : 'Tambah Mitra Kerjasama' }}</h3>
-          <button @click="showPartnerModal = false" class="modal-close">&times;</button>
+          <button @click="!isSaving && (showPartnerModal = false)" class="modal-close" :disabled="isSaving">&times;</button>
         </div>
         <form @submit.prevent="savePartner" class="modal-body">
           <div class="form-group">
@@ -1619,19 +1713,22 @@ onMounted(() => {
             <textarea v-model="partnerForm.description" class="form-textarea" rows="3" required></textarea>
           </div>
           <div class="modal-footer">
-            <button type="button" @click="showPartnerModal = false" class="btn btn-secondary">Batal</button>
-            <button type="submit" class="btn btn-primary">Simpan Mitra</button>
+            <button type="button" @click="!isSaving && (showPartnerModal = false)" class="btn btn-secondary" :disabled="isSaving">Batal</button>
+            <button type="submit" class="btn btn-primary" :disabled="isSaving">
+              <span v-if="isSaving" class="spinner-sm"></span>
+              {{ isSaving ? 'Menyimpan...' : (isEditingPartner ? 'Simpan Perubahan' : 'Simpan Mitra') }}
+            </button>
           </div>
         </form>
       </div>
     </div>
 
     <!-- REPORT MODAL -->
-    <div v-if="showReportModal" class="modal-backdrop" @click.self="showReportModal = false">
+    <div v-if="showReportModal" class="modal-backdrop" @click.self="!isSaving && (showReportModal = false)">
       <div class="modal-window">
         <div class="modal-header">
           <h3>{{ isEditingReport ? 'Edit Dokumen Laporan' : 'Tambah Dokumen Laporan RAT' }}</h3>
-          <button @click="showReportModal = false" class="modal-close">&times;</button>
+          <button @click="!isSaving && (showReportModal = false)" class="modal-close" :disabled="isSaving">&times;</button>
         </div>
         <form @submit.prevent="saveReport" class="modal-body">
           <div class="form-group">
@@ -1653,19 +1750,22 @@ onMounted(() => {
             <input v-model="reportForm.downloadUrl" type="text" class="form-input" placeholder="https://... atau #" />
           </div>
           <div class="modal-footer">
-            <button type="button" @click="showReportModal = false" class="btn btn-secondary">Batal</button>
-            <button type="submit" class="btn btn-primary">Simpan Laporan</button>
+            <button type="button" @click="!isSaving && (showReportModal = false)" class="btn btn-secondary" :disabled="isSaving">Batal</button>
+            <button type="submit" class="btn btn-primary" :disabled="isSaving">
+              <span v-if="isSaving" class="spinner-sm"></span>
+              {{ isSaving ? 'Menyimpan...' : (isEditingReport ? 'Simpan Perubahan' : 'Simpan Laporan') }}
+            </button>
           </div>
         </form>
       </div>
     </div>
 
     <!-- FAQ MODAL -->
-    <div v-if="showFaqModal" class="modal-backdrop" @click.self="showFaqModal = false">
+    <div v-if="showFaqModal" class="modal-backdrop" @click.self="!isSaving && (showFaqModal = false)">
       <div class="modal-window">
         <div class="modal-header">
           <h3>{{ isEditingFaq ? 'Edit FAQ' : 'Tambah Tanya Jawab (FAQ)' }}</h3>
-          <button @click="showFaqModal = false" class="modal-close">&times;</button>
+          <button @click="!isSaving && (showFaqModal = false)" class="modal-close" :disabled="isSaving">&times;</button>
         </div>
         <form @submit.prevent="saveFaq" class="modal-body">
           <div class="form-group">
@@ -1677,8 +1777,11 @@ onMounted(() => {
             <textarea v-model="faqForm.answer" class="form-textarea" rows="4" required></textarea>
           </div>
           <div class="modal-footer">
-            <button type="button" @click="showFaqModal = false" class="btn btn-secondary">Batal</button>
-            <button type="submit" class="btn btn-primary">Simpan</button>
+            <button type="button" @click="!isSaving && (showFaqModal = false)" class="btn btn-secondary" :disabled="isSaving">Batal</button>
+            <button type="submit" class="btn btn-primary" :disabled="isSaving">
+              <span v-if="isSaving" class="spinner-sm"></span>
+              {{ isSaving ? 'Menyimpan...' : (isEditingFaq ? 'Simpan Perubahan' : 'Simpan FAQ') }}
+            </button>
           </div>
         </form>
       </div>
@@ -1729,6 +1832,19 @@ onMounted(() => {
         </div>
       </div>
     </div>
+
+    <!-- GLOBAL SAVING / LOCK SCREEN OVERLAY -->
+    <transition name="fade">
+      <div v-if="isSaving" class="global-saving-overlay">
+        <div class="saving-card">
+          <div class="saving-spinner-ring"></div>
+          <div class="saving-text-box">
+            <h4 class="saving-title">{{ savingMessage || 'Menyimpan Perubahan...' }}</h4>
+            <p class="saving-subtitle">Mohon tunggu sebentar, sistem sedang memproses data dengan aman...</p>
+          </div>
+        </div>
+      </div>
+    </transition>
 
   </div>
 </template>
@@ -2976,5 +3092,109 @@ onMounted(() => {
     height: 28px;
     font-size: 0.8rem;
   }
+}
+
+/* ==========================================================================
+   GLOBAL SAVING / LOCK SCREEN OVERLAY & SPINNERS
+   ========================================================================== */
+.global-saving-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  background: rgba(2, 44, 34, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  animation: fadeInOverlay 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeInOverlay {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.saving-card {
+  background: #FFFFFF;
+  border-radius: 20px;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(0, 0, 0, 0.06);
+  padding: 2.25rem 2.5rem;
+  max-width: 440px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.25rem;
+  animation: scaleUpCard 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes scaleUpCard {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.saving-spinner-ring {
+  width: 56px;
+  height: 56px;
+  border: 4px solid rgba(5, 150, 105, 0.15);
+  border-top-color: #059669;
+  border-right-color: #10B981;
+  border-radius: 50%;
+  animation: spinRing 0.75s linear infinite;
+}
+
+@keyframes spinRing {
+  to { transform: rotate(360deg); }
+}
+
+.saving-text-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.saving-title {
+  margin: 0;
+  font-size: 1.18rem;
+  font-weight: 700;
+  color: #0F172A;
+  letter-spacing: -0.01em;
+}
+
+.saving-subtitle {
+  margin: 0;
+  font-size: 0.88rem;
+  color: #64748B;
+  line-height: 1.5;
+}
+
+/* Button Loading & Disabled States */
+.spinner-sm {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 0.5rem;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #FFFFFF;
+  border-radius: 50%;
+  vertical-align: middle;
+  animation: spinRing 0.7s linear infinite;
+}
+
+button:disabled,
+.btn:disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+  filter: grayscale(0.2);
 }
 </style>

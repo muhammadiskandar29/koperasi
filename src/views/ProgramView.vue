@@ -32,13 +32,23 @@ const closeProgramDetail = () => {
   selectedProgram.value = null
 }
 
-onMounted(async () => {
+onMounted(() => {
+  // 1. Instant 0ms render from localStorage cache
   try {
-    const res = await fetch('/api/programs?t=' + Date.now()).then(r => r.json())
-    if (res.success && res.data && res.data.length > 0) {
-      programsList.value = res.data.filter(p => p.is_active !== false)
-    }
+    const cachedPrograms = localStorage.getItem('kmlc_programs_cache')
+    if (cachedPrograms) programsList.value = JSON.parse(cachedPrograms)
   } catch (e) {}
+
+  // 2. Fetch in background
+  fetch('/api/programs')
+    .then(r => r.json())
+    .then(res => {
+      if (res.success && res.data && res.data.length > 0) {
+        programsList.value = res.data.filter(p => p.is_active !== false)
+        try { localStorage.setItem('kmlc_programs_cache', JSON.stringify(programsList.value)) } catch (e) {}
+      }
+    })
+    .catch(() => {})
 })
 </script>
 
