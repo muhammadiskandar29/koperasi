@@ -39,6 +39,7 @@ onUnmounted(() => {
         <router-link to="/" class="nav-link" active-class="active-link">Beranda</router-link>
         <router-link to="/tentang" class="nav-link" active-class="active-link">Profil Korporasi</router-link>
         <router-link to="/program" class="nav-link" active-class="active-link">Layanan Koperasi</router-link>
+        <router-link to="/kegiatan" class="nav-link" active-class="active-link">Galeri Kegiatan</router-link>
         <router-link to="/laporan" class="nav-link" active-class="active-link">Laporan Kinerja</router-link>
         <router-link to="/mitra" class="nav-link" active-class="active-link">Kemitraan</router-link>
       </nav>
@@ -60,6 +61,7 @@ onUnmounted(() => {
         <router-link to="/" class="mobile-link" @click="closeMenu" active-class="active-link">Beranda</router-link>
         <router-link to="/tentang" class="mobile-link" @click="closeMenu" active-class="active-link">Profil Korporasi</router-link>
         <router-link to="/program" class="mobile-link" @click="closeMenu" active-class="active-link">Layanan Koperasi</router-link>
+        <router-link to="/kegiatan" class="mobile-link" @click="closeMenu" active-class="active-link">Galeri Kegiatan</router-link>
         <router-link to="/laporan" class="mobile-link" @click="closeMenu" active-class="active-link">Laporan Kinerja</router-link>
         <router-link to="/mitra" class="mobile-link" @click="closeMenu" active-class="active-link">Kemitraan</router-link>
         <router-link to="/kontak" class="btn btn-primary mt-4" style="text-align: center" @click="closeMenu">Hubungi Kami</router-link>
@@ -105,7 +107,7 @@ onUnmounted(() => {
 
 .nav-links {
   display: flex;
-  gap: 2.5rem;
+  gap: 1.65rem;
   align-items: center;
 }
 

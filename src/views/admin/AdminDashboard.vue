@@ -14,6 +14,7 @@ const statusMessage = ref({ text: '', type: 'success' })
 // Data State
 const stats = ref([])
 const news = ref([])
+const activities = ref([])
 const programs = ref([])
 const messages = ref([])
 const content = ref({
@@ -69,6 +70,26 @@ const newsForm = ref({
   summary: '',
   content: '',
   is_published: true
+})
+
+const showActivityModal = ref(false)
+const isEditingActivity = ref(false)
+const activityForm = ref({
+  id: null,
+  type: 'image',
+  title: '',
+  category: 'Pembukaan Lahan',
+  media_url: '',
+  thumbnail_url: '',
+  date: '',
+  time: '',
+  location: '',
+  district: '',
+  regency: 'Kab. Indramayu, Jawa Barat',
+  coordinates: '',
+  altitude: '',
+  equipment: '',
+  description: ''
 })
 
 const showProgramModal = ref(false)
@@ -140,9 +161,10 @@ const fetchAllData = async () => {
   isLoading.value = true
   const ts = Date.now()
   try {
-    const [statsRes, newsRes, programsRes, messagesRes, contentRes] = await Promise.all([
+    const [statsRes, newsRes, activitiesRes, programsRes, messagesRes, contentRes] = await Promise.all([
       fetch(`/api/stats?t=${ts}`).then(r => r.json()),
       fetch(`/api/news?t=${ts}`).then(r => r.json()),
+      fetch(`/api/activities?t=${ts}`).then(r => r.json()),
       fetch(`/api/programs?t=${ts}`).then(r => r.json()),
       fetch(`/api/messages?t=${ts}`).then(r => r.json()),
       fetch(`/api/content?t=${ts}`).then(r => r.json())
@@ -150,6 +172,7 @@ const fetchAllData = async () => {
 
     if (statsRes.success) stats.value = statsRes.data || []
     if (newsRes.success) news.value = newsRes.data || []
+    if (activitiesRes.success) activities.value = activitiesRes.data || []
     if (programsRes.success) programs.value = programsRes.data || []
     if (messagesRes.success) messages.value = messagesRes.data || []
     if (contentRes.success && contentRes.data) {
@@ -261,6 +284,73 @@ const deleteNews = async (id) => {
     fetchAllData()
   } catch (err) {
     notify('Gagal menghapus berita: ' + err.message, 'error')
+  }
+}
+
+// ======================== ACTIVITIES HANDLERS ========================
+const openCreateActivityModal = () => {
+  isEditingActivity.value = false
+  activityForm.value = {
+    id: null,
+    type: 'image',
+    title: '',
+    category: 'Pembukaan Lahan',
+    media_url: '/assets/images/WhatsApp Image 2026-10-12 at 08.29.44.jpeg',
+    thumbnail_url: '',
+    date: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }),
+    time: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB',
+    location: '',
+    district: '',
+    regency: 'Kab. Indramayu, Jawa Barat',
+    coordinates: '',
+    altitude: '',
+    equipment: '',
+    description: ''
+  }
+  showActivityModal.value = true
+}
+
+const openEditActivityModal = (item) => {
+  isEditingActivity.value = true
+  activityForm.value = { ...item }
+  showActivityModal.value = true
+}
+
+const saveActivity = async () => {
+  if (!activityForm.value.title || !activityForm.value.media_url) {
+    alert('Judul dan URL media (foto/video) wajib diisi.')
+    return
+  }
+
+  try {
+    const method = isEditingActivity.value ? 'PUT' : 'POST'
+    const res = await fetch('/api/activities', {
+      method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(activityForm.value)
+    })
+    const result = await res.json()
+    if (!res.ok || !result.success) throw new Error(result.message)
+
+    showActivityModal.value = false
+    notify(isEditingActivity.value ? 'Dokumentasi kegiatan berhasil diperbarui di database.' : 'Dokumentasi baru berhasil disimpan ke database Supabase.')
+    fetchAllData()
+  } catch (err) {
+    notify('Gagal menyimpan dokumentasi: ' + err.message, 'error')
+  }
+}
+
+const deleteActivity = async (id) => {
+  if (!confirm('Hapus dokumentasi kegiatan ini dari database Supabase? Tindakan ini permanen.')) return
+  try {
+    const res = await fetch(`/api/activities?id=${id}`, { method: 'DELETE' })
+    const result = await res.json()
+    if (!res.ok || !result.success) throw new Error(result.message)
+
+    notify('Dokumentasi telah berhasil dihapus dari database.')
+    fetchAllData()
+  } catch (err) {
+    notify('Gagal menghapus dokumentasi: ' + err.message, 'error')
   }
 }
 
@@ -540,6 +630,14 @@ onMounted(() => {
           <span class="count-tag">{{ news.length }}</span>
         </button>
 
+        <button :class="['menu-btn', { active: activeTab === 'activities' }]" @click="activeTab = 'activities'">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>
+          </svg>
+          <span>Galeri Kegiatan</span>
+          <span class="count-tag">{{ activities.length }}</span>
+        </button>
+
         <button :class="['menu-btn', { active: activeTab === 'programs' }]" @click="activeTab = 'programs'">
           <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
@@ -630,6 +728,7 @@ onMounted(() => {
               activeTab === 'overview' ? 'Ringkasan Sistem' :
               activeTab === 'hero' ? 'Banner Beranda' :
               activeTab === 'news' ? 'Berita & Kegiatan' :
+              activeTab === 'activities' ? 'Dokumentasi & Galeri Kegiatan' :
               activeTab === 'programs' ? 'Program Layanan' :
               activeTab === 'about' ? 'Profil & Struktur Organisasi' :
               activeTab === 'partners' ? 'Mitra Kerjasama' :
@@ -819,6 +918,78 @@ onMounted(() => {
                     <div class="action-btn-group">
                       <button @click="openEditNewsModal(item)" class="btn-action edit">Edit</button>
                       <button @click="deleteNews(item.id)" class="btn-action delete">Hapus</button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ACTIVITIES TAB -->
+        <div v-if="activeTab === 'activities'" class="tab-pane">
+          <div class="pane-action-bar">
+            <div>
+              <h2>Dokumentasi & Galeri Kegiatan Lapangan</h2>
+              <p class="text-muted">Kelola foto dan video aktivitas pembukaan lahan, rapat koordinasi, serta monitoring lapangan (tersimpan langsung di Supabase).</p>
+            </div>
+            <div class="btn-group-right">
+              <router-link to="/kegiatan" target="_blank" class="btn btn-secondary">Lihat Halaman Galeri</router-link>
+              <button @click="openCreateActivityModal" class="btn btn-primary">+ Tambah Dokumentasi Baru</button>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table class="cms-table">
+              <thead>
+                <tr>
+                  <th style="width: 80px">Media</th>
+                  <th>Judul Kegiatan</th>
+                  <th>Tipe</th>
+                  <th>Kategori</th>
+                  <th>Lokasi & Wilayah</th>
+                  <th>Tanggal</th>
+                  <th>Alat / Personel</th>
+                  <th style="text-align: right">Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-if="activities.length === 0">
+                  <td colspan="8" style="text-align: center; padding: 2.5rem; color: var(--color-text-muted)">
+                    Belum ada data dokumentasi kegiatan di database. Klik tombol "+ Tambah Dokumentasi Baru" di atas.
+                  </td>
+                </tr>
+                <tr v-for="item in activities" :key="item.id">
+                  <td>
+                    <video v-if="item.type === 'video'" :src="item.media_url" class="table-thumb" muted style="background: black; object-fit: cover"></video>
+                    <img v-else :src="item.media_url" class="table-thumb" alt="" />
+                  </td>
+                  <td>
+                    <div class="table-title">{{ item.title }}</div>
+                    <div class="date-text" style="font-size: 0.75rem">{{ item.coordinates || '' }}</div>
+                  </td>
+                  <td>
+                    <span :class="['status-chip', item.type === 'video' ? 'draft' : 'published']">
+                      {{ item.type === 'video' ? '🎥 Video' : '📷 Foto' }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="category-pill">{{ item.category }}</span>
+                  </td>
+                  <td>
+                    <div style="font-size: 0.85rem; font-weight: 600">{{ item.location }}</div>
+                    <div class="date-text">{{ item.district }}</div>
+                  </td>
+                  <td>
+                    <span class="date-text">{{ item.date }}</span>
+                  </td>
+                  <td>
+                    <span style="font-size: 0.8rem; color: var(--color-text-muted)">{{ item.equipment }}</span>
+                  </td>
+                  <td style="text-align: right">
+                    <div class="action-btn-group">
+                      <button @click="openEditActivityModal(item)" class="btn-action edit">Edit</button>
+                      <button @click="deleteActivity(item.id)" class="btn-action delete">Hapus</button>
                     </div>
                   </td>
                 </tr>
@@ -1269,6 +1440,96 @@ onMounted(() => {
           <div class="modal-footer">
             <button type="button" @click="showNewsModal = false" class="btn btn-secondary">Batal</button>
             <button type="submit" class="btn btn-primary">Simpan Berita</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ACTIVITY MODAL (TAMBAH / EDIT DOKUMENTASI KEGIATAN) -->
+    <div v-if="showActivityModal" class="modal-backdrop" @click.self="showActivityModal = false">
+      <div class="modal-window">
+        <div class="modal-header">
+          <h3>{{ isEditingActivity ? 'Edit Dokumentasi Kegiatan' : 'Tambah Dokumentasi Kegiatan Baru' }}</h3>
+          <button @click="showActivityModal = false" class="modal-close">&times;</button>
+        </div>
+        <form @submit.prevent="saveActivity" class="modal-body">
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label>Tipe Media</label>
+              <select v-model="activityForm.type" class="form-select">
+                <option value="image">Foto Lapangan</option>
+                <option value="video">Video Lapangan</option>
+              </select>
+            </div>
+            <div class="form-group flex-1">
+              <label>Kategori Kegiatan</label>
+              <input v-model="activityForm.category" type="text" class="form-input" placeholder="Contoh: Pembukaan Lahan" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Judul Dokumentasi</label>
+            <input v-model="activityForm.title" type="text" class="form-input font-bold" placeholder="Contoh: Land Clearing & Perataan Lahan Cikawung" required />
+          </div>
+
+          <div class="form-group">
+            <label>URL File Media (Foto / Video)</label>
+            <input v-model="activityForm.media_url" type="text" class="form-input" placeholder="/assets/images/... atau URL eksternal" required />
+            <span class="field-hint">Dapat menggunakan video/foto yang ada di public/assets/images/ (contoh: /assets/images/WhatsApp Video 2026-10-12 at 08.29.50.mp4)</span>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label>Tanggal</label>
+              <input v-model="activityForm.date" type="text" class="form-input" placeholder="Contoh: 10 Oktober 2026" />
+            </div>
+            <div class="form-group flex-1">
+              <label>Waktu / Jam</label>
+              <input v-model="activityForm.time" type="text" class="form-input" placeholder="Contoh: 09:13 WIB" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label>Nama Titik Lokasi</label>
+              <input v-model="activityForm.location" type="text" class="form-input" placeholder="Contoh: Blok Lahan Cikawung" required />
+            </div>
+            <div class="form-group flex-1">
+              <label>Kecamatan</label>
+              <input v-model="activityForm.district" type="text" class="form-input" placeholder="Contoh: Kec. Terisi" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label>Kabupaten / Provinsi</label>
+              <input v-model="activityForm.regency" type="text" class="form-input" placeholder="Contoh: Kab. Indramayu, Jawa Barat" />
+            </div>
+            <div class="form-group flex-1">
+              <label>Koordinat GPS / Arah</label>
+              <input v-model="activityForm.coordinates" type="text" class="form-input" placeholder="Contoh: -6.625770, +107.998556" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label>Ketinggian (Elevasi)</label>
+              <input v-model="activityForm.altitude" type="text" class="form-input" placeholder="Contoh: 90.0 msnm" />
+            </div>
+            <div class="form-group flex-1">
+              <label>Alat / Personel Lapangan</label>
+              <input v-model="activityForm.equipment" type="text" class="form-input" placeholder="Contoh: Excavator Kobelco & Wheel Loader" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Deskripsi Kegiatan</label>
+            <textarea v-model="activityForm.description" class="form-textarea" rows="3" placeholder="Tuliskan keterangan detail proses pengerjaan atau hasil kegiatan..."></textarea>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" @click="showActivityModal = false" class="btn btn-secondary">Batal</button>
+            <button type="submit" class="btn btn-primary">Simpan ke Supabase</button>
           </div>
         </form>
       </div>

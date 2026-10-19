@@ -35,6 +35,7 @@ onMounted(async () => {
             <li><router-link to="/">Beranda</router-link></li>
             <li><router-link to="/tentang">Profil Korporasi</router-link></li>
             <li><router-link to="/program">Layanan Koperasi</router-link></li>
+            <li><router-link to="/kegiatan">Galeri Kegiatan</router-link></li>
             <li><router-link to="/laporan">Laporan Kinerja</router-link></li>
             <li><router-link to="/mitra">Kemitraan Jaringan</router-link></li>
             <li><router-link to="/kontak">Pusat Informasi</router-link></li>

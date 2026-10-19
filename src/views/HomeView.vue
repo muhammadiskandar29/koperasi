@@ -130,6 +130,12 @@ const closeNewsDetail = () => {
             </div>
           </BaseCard>
         </div>
+
+        <div class="text-center mt-5 animate-fade-up">
+          <router-link to="/kegiatan" class="btn btn-outline" style="border-radius: 9999px; padding: 0.8rem 2rem; font-weight: 700;">
+            Lihat Galeri Foto & Video Lapangan &rarr;
+          </router-link>
+        </div>
       </div>
     </section>
 

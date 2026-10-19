@@ -26,6 +26,8 @@ function localApiPlugin() {
             handlerModule = await import('./api/auth.js')
           } else if (routeName === 'content') {
             handlerModule = await import('./api/content.js')
+          } else if (routeName === 'activities') {
+            handlerModule = await import('./api/activities.js')
           } else {
             return next()
           }
